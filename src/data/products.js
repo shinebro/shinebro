@@ -1,0 +1,47 @@
+export const products = [
+    {
+        id: 1,
+        name: "Natural Laundry Liquid",
+        price: 499,
+        image: "/images/laundry-liquid.png",
+        category: "Laundry",
+        rating: 4.8,
+        reviews: 120,
+        isNew: true,
+    },
+    {
+        id: 2,
+        name: "Liquid Dishwash",
+        price: 210,
+        image: "/images/dishwash-product.jpg",
+        category: "Kitchen",
+        rating: 4.7,
+        reviews: 85,
+        isNew: false,
+        sizes: [
+            { size: "1L", price: 120 },
+            { size: "2L", price: 210 },
+            { size: "5L", price: 399 }
+        ]
+    },
+    {
+        id: 3,
+        name: "Floor Cleaner",
+        price: 349,
+        image: "https://placehold.co/400x400/e2e8f0/1e293b?text=Floor+Cleaner",
+        category: "Floor",
+        rating: 4.9,
+        reviews: 200,
+        isNew: true,
+    },
+    {
+        id: 4,
+        name: "Fabric Conditioner",
+        price: 399,
+        image: "https://placehold.co/400x400/e2e8f0/1e293b?text=Fabric+Cond",
+        category: "Laundry",
+        rating: 4.6,
+        reviews: 50,
+        isNew: false,
+    },
+];

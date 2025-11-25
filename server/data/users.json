@@ -1,0 +1,66 @@
+[
+  {
+    "id": 1763908449236,
+    "name": "Test User",
+    "email": "test@example.com",
+    "password": "password123",
+    "shippingInfo": {}
+  },
+  {
+    "id": 1763908642867,
+    "name": "aman",
+    "email": "nishadaman075@gmail.com",
+    "password": "romanempire",
+    "shippingInfo": {}
+  },
+  {
+    "id": 1764043084076,
+    "name": "Test User",
+    "email": "invalid-email",
+    "password": "$2b$10$3YAjNIlNkaowlvTdtLcPOuvcxIrD1jq785W3IQm68bhTM6bj8m89G",
+    "shippingInfo": {}
+  },
+  {
+    "id": 1764043326877,
+    "name": "aman",
+    "email": "nishadaman454@gmail.com",
+    "password": "$2b$10$BF5EVNwHxIhQtOoLyv0uJeHp30gU7V4SbbMNmYnXbltP90WQZZ6Za",
+    "shippingInfo": {
+      "firstName": "aman",
+      "lastName": "",
+      "address": "123 Test St",
+      "city": "Testville",
+      "zipCode": "12345",
+      "phone": "9876543210"
+    }
+  },
+  {
+    "id": 1764048870392,
+    "name": "Aman Nishad",
+    "email": "nishad@gmail.com",
+    "password": "$2b$10$CgHmvv2lfqsqVnUw37dLz.jCE72tHb4xON8hRN6pSXTlxwt9iVuhK",
+    "shippingInfo": {
+      "firstName": "Aman",
+      "lastName": "Nishad",
+      "address": "123 Test St",
+      "city": "Testville",
+      "zipCode": "12345",
+      "phone": "9876543210"
+    }
+  },
+  {
+    "id": 1764053472291,
+    "name": "Aman Nishad",
+    "email": "hichd@gmail.com",
+    "password": "$2b$10$LrBW0gUCXCcitnI8CgnGbemjKFti.YmKEuBTxJPlGrjbeYdJbq/XW",
+    "shippingInfo": {
+      "firstName": "Aman",
+      "lastName": "Nishad",
+      "email": "hichd@gmail.com",
+      "address": "123 Test St",
+      "city": "Mumbai",
+      "zipCode": "12345",
+      "phone": "1234567890"
+    }
+  }
+]

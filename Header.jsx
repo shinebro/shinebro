@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingCart, Menu, X, Search, User, LogOut, Sparkles } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import logo from '../assets/logo.png';
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -92,10 +93,7 @@ const Header = () => {
                                 {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
                             </button>
                             <Link to="/" className="flex items-center gap-2">
-                                <div className="w-8 h-8 md:w-10 md:h-10 bg-primary rounded-full flex items-center justify-center">
-                                    <Sparkles className="text-white" size={18} />
-                                </div>
-                                <span className="text-xl md:text-2xl font-bold text-gray-800">ShineBro</span>
+                                <img src={logo} alt="ShineBro" className="h-16 md:h-20 object-contain" />
                             </Link>
                         </div>
 

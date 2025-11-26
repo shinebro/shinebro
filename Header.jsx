@@ -98,12 +98,7 @@ const Header = () => {
                         </div>
 
                         {/* Desktop Navigation (Hidden on Mobile) */}
-                        <nav className="hidden md:flex items-center gap-8">
-                            <Link to="/" className="text-gray-600 hover:text-primary font-medium transition-colors">Home</Link>
-                            <Link to="/shop" className="text-gray-600 hover:text-primary font-medium transition-colors">Shop</Link>
-                            <a href="#about" className="text-gray-600 hover:text-primary font-medium transition-colors">About Us</a>
-                            <Link to="/contact" className="text-gray-600 hover:text-primary font-medium transition-colors">Contact</Link>
-                        </nav>
+                        {/* Desktop Navigation Removed as per request */}
 
                         {/* Right Icons */}
                         <div className="flex items-center gap-3 md:gap-6">

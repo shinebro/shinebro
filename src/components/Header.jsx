@@ -30,6 +30,7 @@ const Header = () => {
     return (
         <div className="w-full relative">
             {/* Top Info Bar */}
+            {/* Top Info Bar */}
             <div className="bg-[#9c4dcc] text-white text-xs md:text-sm py-2">
                 <div className="overflow-hidden relative w-full">
                     <div className="flex whitespace-nowrap animate-scroll w-max">
@@ -82,23 +83,24 @@ const Header = () => {
             </div>
 
             <header className="bg-white shadow-sm sticky top-0 z-50">
-                <div className="container mx-auto px-4 py-4">
+                <div className="container mx-auto px-4 py-0">
                     <div className="flex items-center justify-between">
                         {/* Left Section: Menu & Logo */}
                         <div className="flex items-center gap-2 md:gap-4">
                             <button
-                                className="text-gray-600 hover:text-primary transition-colors"
+                                className="text-gray-600 hover:text-primary transition-colors lg:hidden"
                                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                             >
                                 {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
                             </button>
                             <Link to="/" className="flex items-center gap-2">
-                                <img src={logo} alt="ShineBro" className="h-22 md:w-22 object-contain" />
+                                <img src={logo} alt="ShineBro" style={{ width: '250px', maxWidth: '80vw', mixBlendMode: 'multiply', marginTop: '-65px', marginBottom: '-65px' }} className="h-auto object-contain" />
                             </Link>
                         </div>
 
                         {/* Desktop Navigation (Hidden on Mobile) */}
-                        <nav className="hidden md:flex items-center gap-8">
+                        {/* Desktop Navigation (Hidden on Mobile) */}
+                        <nav className="hidden lg:flex items-center gap-8">
                             <Link to="/" className="text-gray-600 hover:text-primary font-medium transition-colors">Home</Link>
                             <Link to="/shop" className="text-gray-600 hover:text-primary font-medium transition-colors">Shop</Link>
                             <a href="#about" className="text-gray-600 hover:text-primary font-medium transition-colors">About Us</a>

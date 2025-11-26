@@ -30,6 +30,7 @@ const Header = () => {
     return (
         <div className="w-full relative">
             {/* Top Info Bar */}
+            {/* Top Info Bar */}
             <div className="bg-[#9c4dcc] text-white text-xs md:text-sm py-2">
                 <div className="overflow-hidden relative w-full">
                     <div className="flex whitespace-nowrap animate-scroll w-max">
@@ -93,7 +94,7 @@ const Header = () => {
                                 {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
                             </button>
                             <Link to="/" className="flex items-center gap-2">
-                                <img src={logo} alt="ShineBro" style={{ width: '600px', maxWidth: '90vw', mixBlendMode: 'multiply', marginTop: '-40px', marginBottom: '-40px' }} className="h-auto object-contain" />
+                                <img src={logo} alt="ShineBro" style={{ width: '200px', maxWidth: '80vw', mixBlendMode: 'multiply' }} className="h-auto object-contain" />
                             </Link>
                         </div>
 

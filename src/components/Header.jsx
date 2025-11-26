@@ -104,7 +104,7 @@ const Header = () => {
                             <Link to="/" className="text-gray-600 hover:text-primary font-medium transition-colors">Home</Link>
                             <Link to="/shop" className="text-gray-600 hover:text-primary font-medium transition-colors">Shop</Link>
                             <a href="#about" className="text-gray-600 hover:text-primary font-medium transition-colors">About Us</a>
-                            <a href="#contact" className="text-gray-600 hover:text-primary font-medium transition-colors">Contact</a>
+                            <Link to="/contact" className="text-gray-600 hover:text-primary font-medium transition-colors">Contact</Link>
                         </nav>
 
                         {/* Right Icons */}
@@ -178,7 +178,7 @@ const Header = () => {
                                 <Link to="/" className="text-gray-600 hover:text-primary font-medium" onClick={() => setIsMenuOpen(false)}>Home</Link>
                                 <Link to="/shop" className="text-gray-600 hover:text-primary font-medium" onClick={() => setIsMenuOpen(false)}>Shop</Link>
                                 <a href="#about" className="text-gray-600 hover:text-primary font-medium" onClick={() => setIsMenuOpen(false)}>About Us</a>
-                                <a href="#contact" className="text-gray-600 hover:text-primary font-medium" onClick={() => setIsMenuOpen(false)}>Contact</a>
+                                <Link to="/contact" className="text-gray-600 hover:text-primary font-medium" onClick={() => setIsMenuOpen(false)}>Contact</Link>
                                 {!user && (
                                     <Link
                                         to="/login"

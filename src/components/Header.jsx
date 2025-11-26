@@ -92,10 +92,7 @@ const Header = () => {
                                 {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
                             </button>
                             <Link to="/" className="flex items-center gap-2">
-                                <div className="w-8 h-8 md:w-10 md:h-10 bg-primary rounded-full flex items-center justify-center">
-                                    <Sparkles className="text-white" size={18} />
-                                </div>
-                                <span className="text-xl md:text-2xl font-bold text-gray-800">ShineBro</span>
+                                <img src={logo} alt="ShineBro" className="h-10 md:h-12 object-contain" />
                             </Link>
                         </div>
 

@@ -87,7 +87,7 @@ const Header = () => {
                         {/* Left Section: Menu & Logo */}
                         <div className="flex items-center gap-2 md:gap-4">
                             <button
-                                className="text-gray-600 hover:text-primary transition-colors"
+                                className="text-gray-600 hover:text-primary transition-colors md:hidden"
                                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                             >
                                 {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -98,7 +98,12 @@ const Header = () => {
                         </div>
 
                         {/* Desktop Navigation (Hidden on Mobile) */}
-                        {/* Desktop Navigation Removed as per request */}
+                        <nav className="hidden md:flex items-center gap-8">
+                            <Link to="/" className="text-gray-600 hover:text-primary font-medium transition-colors">Home</Link>
+                            <Link to="/shop" className="text-gray-600 hover:text-primary font-medium transition-colors">Shop</Link>
+                            <a href="#about" className="text-gray-600 hover:text-primary font-medium transition-colors">About Us</a>
+                            <Link to="/contact" className="text-gray-600 hover:text-primary font-medium transition-colors">Contact</Link>
+                        </nav>
 
                         {/* Right Icons */}
                         <div className="flex items-center gap-3 md:gap-6">

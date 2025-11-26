@@ -88,23 +88,18 @@ const Header = () => {
                         {/* Left Section: Menu & Logo */}
                         <div className="flex items-center gap-2 md:gap-4">
                             <button
-                                className="text-gray-600 hover:text-primary transition-colors lg:hidden"
+                                className="text-gray-600 hover:text-primary transition-colors"
                                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                             >
                                 {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
                             </button>
                             <Link to="/" className="flex items-center gap-2">
-                                <img src={logo} alt="ShineBro" style={{ width: '200px', maxWidth: '80vw', mixBlendMode: 'multiply' }} className="h-auto object-contain" />
+                                <img src={logo} alt="ShineBro" style={{ width: '250px', maxWidth: '80vw', mixBlendMode: 'multiply' }} className="h-auto object-contain" />
                             </Link>
                         </div>
 
                         {/* Desktop Navigation (Hidden on Mobile) */}
-                        <nav className="hidden lg:flex items-center gap-8">
-                            <Link to="/" className="text-gray-600 hover:text-primary font-medium transition-colors">Home</Link>
-                            <Link to="/shop" className="text-gray-600 hover:text-primary font-medium transition-colors">Shop</Link>
-                            <a href="#about" className="text-gray-600 hover:text-primary font-medium transition-colors">About Us</a>
-                            <Link to="/contact" className="text-gray-600 hover:text-primary font-medium transition-colors">Contact</Link>
-                        </nav>
+                        {/* Desktop Navigation Removed to match screenshot */}
 
                         {/* Right Icons */}
                         <div className="flex items-center gap-3 md:gap-6">

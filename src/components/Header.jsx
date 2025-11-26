@@ -127,10 +127,11 @@ const Header = () => {
                             ) : (
                                 <Link
                                     to="/signup"
-                                    className="flex items-center gap-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold px-3 py-1.5 md:px-4 md:py-2 rounded-lg transition-all transform hover:scale-105"
+                                    className="flex items-center gap-2 text-gray-600 hover:text-primary md:bg-gradient-to-r md:from-green-600 md:to-emerald-600 md:hover:from-green-700 md:hover:to-emerald-700 md:text-white md:font-semibold md:px-4 md:py-2 md:rounded-lg transition-all transform md:hover:scale-105"
                                 >
-                                    <Sparkles size={18} />
-                                    <span className="hidden sm:inline">Sign Up</span>
+                                    <Sparkles size={22} className="hidden md:block" />
+                                    <User size={22} className="block md:hidden" />
+                                    <span className="hidden md:inline">Sign Up</span>
                                 </Link>
                             )}
 

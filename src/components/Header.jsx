@@ -94,7 +94,7 @@ const Header = () => {
                                 {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
                             </button>
                             <Link to="/" className="flex items-center gap-2">
-                                <img src={logo} alt="ShineBro" style={{ width: '280px', maxWidth: '80vw', mixBlendMode: 'multiply' }} className="h-auto object-contain" />
+                                <img src={logo} alt="ShineBro" style={{ mixBlendMode: 'multiply' }} className="h-auto object-contain w-[180px] md:w-[280px]" />
                             </Link>
                         </div>
 

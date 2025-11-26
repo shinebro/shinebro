@@ -94,7 +94,7 @@ const Header = () => {
                                 {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
                             </button>
                             <Link to="/" className="flex items-center gap-2">
-                                <img src={logo} alt="ShineBro" style={{ width: '250px', maxWidth: '80vw', mixBlendMode: 'multiply', marginTop: '-65px', marginBottom: '-65px' }} className="h-auto object-contain" />
+                                <img src={logo} alt="ShineBro" style={{ width: '280px', maxWidth: '80vw', mixBlendMode: 'multiply' }} className="h-auto object-contain" />
                             </Link>
                         </div>
 
@@ -201,6 +201,7 @@ const Header = () => {
 };
 
 export default Header;
+
 
 
 

@@ -93,7 +93,7 @@ const Header = () => {
                                 {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
                             </button>
                             <Link to="/" className="flex items-center gap-2">
-                                <img src={logo} alt="ShineBro" className="h-24 md:h-32 object-contain" />
+                                <img src={logo} alt="ShineBro" className="w-40 md:w-56 h-auto object-contain shrink-0" />
                             </Link>
                         </div>
 

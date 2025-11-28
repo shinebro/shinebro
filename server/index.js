@@ -35,7 +35,6 @@ app.use('/api/', limiter);
 // CORS Configuration
 app.use(cors({
     origin: [
-       
         'https://shinebro.com',
         'https://www.shinebro.com',
         /\.vercel\.app$/ // Allow all Vercel deployments
@@ -172,11 +171,12 @@ app.post('/api/contact', validate(schemas.contact), (req, res) => {
 // Admin Access Notification Endpoint
 app.post('/api/notify-admin-access', (req, res) => {
     console.log("Admin access notification request received");
+    console.log("Attempting to send email from:", process.env.GMAIL_USER);
     const { timestamp, userAgent } = req.body;
 
     const mailOptions = {
         from: process.env.GMAIL_USER,
-        to: 'shinebro2@gmail.com', // Explicitly requested by user
+        to: 'shinebrofficial2@gmail.com', // Updated to correct email
         subject: '⚠️ Security Alert: Admin Login Page Accessed',
         text: `Security Alert!
 
@@ -191,10 +191,11 @@ If this was not you, please investigate immediately.`
 
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-            console.log('Error sending alert email:', error);
-            res.status(500).json({ success: false, message: 'Failed to send alert' });
+            console.error('CRITICAL ERROR sending alert email:', error);
+            res.status(500).json({ success: false, message: 'Failed to send alert', error: error.message });
         } else {
-            console.log('Alert email sent: ' + info.response);
+            console.log('Alert email sent successfully!');
+            console.log('Response:', info.response);
             res.json({ success: true, message: 'Alert sent successfully' });
         }
     });

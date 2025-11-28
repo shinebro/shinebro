@@ -11,6 +11,8 @@ import { CartProvider } from './context/CartContext';
 import Checkout from './pages/Checkout';
 import OrderSummary from './pages/OrderSummary';
 import OrderSuccess from './pages/OrderSuccess';
+import OrderDetails from './pages/OrderDetails';
+import AdminDashboard from './pages/AdminDashboard';
 import Shop from './pages/Shop';
 import CategoryPage from './pages/CategoryPage';
 import GPayPayment from './pages/GPayPayment';
@@ -38,6 +40,8 @@ function App() {
               <Route path="/order-summary" element={<OrderSummary />} />
               <Route path="/gpay-payment" element={<GPayPayment />} />
               <Route path="/order-success" element={<OrderSuccess />} />
+              <Route path="/order/:orderId" element={<OrderDetails />} />
+              <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/shop" element={<Shop />} />
               <Route path="/shop/:categoryId" element={<CategoryPage />} />
               <Route path="/login" element={<Login />} />

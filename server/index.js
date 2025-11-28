@@ -35,6 +35,8 @@ app.use('/api/', limiter);
 // CORS Configuration
 app.use(cors({
     origin: [
+        'http://localhost:5173',
+        'http://localhost:5174',
         'https://shinebro.com',
         'https://www.shinebro.com',
         /\.vercel\.app$/ // Allow all Vercel deployments
@@ -239,6 +241,91 @@ app.post('/api/send-verification-code', async (req, res) => {
             res.json({ success: true, message: 'Verification code sent' });
         }
     });
+});
+
+// Forgot Password - Request OTP
+app.post('/api/forgot-password', validate(schemas.forgotPassword), async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Generate 6-digit code
+        const code = Math.floor(100000 + Math.random() * 900000).toString();
+
+        // Store code with expiration (10 minutes)
+        otpStore.set(email, {
+            code,
+            expires: Date.now() + 10 * 60 * 1000
+        });
+
+        const mailOptions = {
+            from: process.env.GMAIL_USER,
+            to: email,
+            subject: 'ShineBro Password Reset Code',
+            text: `Your password reset code is: ${code}\n\nThis code will expire in 10 minutes.`
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error sending OTP:', error);
+                res.status(500).json({ success: false, message: 'Failed to send reset code' });
+            } else {
+                console.log('Reset OTP sent to:', email);
+                res.json({ success: true, message: 'Reset code sent' });
+            }
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// Reset Password
+app.post('/api/reset-password', validate(schemas.resetPassword), async (req, res) => {
+    const { email, code, newPassword } = req.body;
+
+    // Verify OTP
+    const storedOtp = otpStore.get(email);
+    if (!storedOtp) {
+        return res.status(400).json({ message: 'Reset code expired or not found. Please request a new one.' });
+    }
+
+    if (storedOtp.code !== code) {
+        return res.status(400).json({ message: 'Invalid reset code' });
+    }
+
+    if (Date.now() > storedOtp.expires) {
+        otpStore.delete(email);
+        return res.status(400).json({ message: 'Reset code expired' });
+    }
+
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Hash new password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        user.password = hashedPassword;
+        await user.save();
+
+        // Clear OTP
+        otpStore.delete(email);
+
+        res.json({ success: true, message: 'Password reset successfully' });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
 });
 
 // Authentication Endpoints

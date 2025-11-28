@@ -13,6 +13,8 @@ import OrderSummary from './pages/OrderSummary';
 import OrderSuccess from './pages/OrderSuccess';
 import OrderDetails from './pages/OrderDetails';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminLogin from './pages/AdminLogin';
+import AdminRoute from './components/AdminRoute';
 import Shop from './pages/Shop';
 import CategoryPage from './pages/CategoryPage';
 import GPayPayment from './pages/GPayPayment';
@@ -41,7 +43,12 @@ function App() {
               <Route path="/gpay-payment" element={<GPayPayment />} />
               <Route path="/order-success" element={<OrderSuccess />} />
               <Route path="/order/:orderId" element={<OrderDetails />} />
-              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/admin" element={
+                <AdminRoute>
+                  <AdminDashboard />
+                </AdminRoute>
+              } />
               <Route path="/shop" element={<Shop />} />
               <Route path="/shop/:categoryId" element={<CategoryPage />} />
               <Route path="/login" element={<Login />} />

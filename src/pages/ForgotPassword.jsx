@@ -1,0 +1,101 @@
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Mail, ArrowLeft, Sparkles } from 'lucide-react';
+
+const ForgotPassword = () => {
+    const [email, setEmail] = useState('');
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        setLoading(true);
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/forgot-password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                // Navigate to Reset Password page, passing email in state
+                navigate('/reset-password', { state: { email } });
+            } else {
+                setError(data.message || 'Failed to send reset code');
+            }
+        } catch (err) {
+            setError('Failed to connect to server');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-md w-full">
+                <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
+                    {/* Header */}
+                    <div className="bg-gradient-to-r from-green-600 to-emerald-600 px-8 py-10 text-center relative">
+                        <Link to="/login" className="absolute top-6 left-6 text-white/80 hover:text-white transition-colors">
+                            <ArrowLeft className="h-6 w-6" />
+                        </Link>
+                        <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full mb-4">
+                            <Sparkles className="h-8 w-8 text-white" />
+                        </div>
+                        <h1 className="text-3xl font-bold text-white mb-2">
+                            Forgot Password?
+                        </h1>
+                        <p className="text-green-100 text-sm">
+                            Enter your email to receive a reset code
+                        </p>
+                    </div>
+
+                    {/* Form */}
+                    <div className="px-8 py-10">
+                        <form className="space-y-6" onSubmit={handleSubmit}>
+                            {error && (
+                                <div className="p-4 text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl flex items-start gap-2">
+                                    <span className="text-red-500">⚠️</span>
+                                    <span>{error}</span>
+                                </div>
+                            )}
+
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    Email Address
+                                </label>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <Mail className="h-5 w-5 text-gray-400" />
+                                    </div>
+                                    <input
+                                        required
+                                        type="email"
+                                        className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent placeholder-gray-400 transition-all"
+                                        placeholder="Enter your email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold py-4 px-4 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-opacity-50 transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                            >
+                                {loading ? 'Sending...' : 'Send Reset Code'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default ForgotPassword;

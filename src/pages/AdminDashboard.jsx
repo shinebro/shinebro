@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Package, Truck, CheckCircle, Clock, AlertCircle, ChevronDown, LogOut } from 'lucide-react';
-import { getOrders, updateOrderStatus } from '../utils/orderStorage';
+import { Package, Truck, CheckCircle, Clock, AlertCircle, ChevronDown, LogOut, Trash2 } from 'lucide-react';
+import { getOrders, updateOrderStatus, deleteOrder } from '../utils/orderStorage';
 import { useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
@@ -33,6 +33,13 @@ const AdminDashboard = () => {
     const handleStatusChange = (orderId, newStatus) => {
         const updatedOrders = updateOrderStatus(orderId, newStatus);
         setOrders(updatedOrders);
+    };
+
+    const handleDeleteOrder = (orderId) => {
+        if (window.confirm('Are you sure you want to delete this order? This action cannot be undone.')) {
+            const updatedOrders = deleteOrder(orderId);
+            setOrders(updatedOrders);
+        }
     };
 
     const handleLogout = () => {
@@ -111,6 +118,13 @@ const AdminDashboard = () => {
                                                     <ChevronDown size={14} />
                                                 </div>
                                             </div>
+                                            <button
+                                                onClick={() => handleDeleteOrder(order.id)}
+                                                className="ml-3 p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                                                title="Delete Order"
+                                            >
+                                                <Trash2 size={18} />
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}
@@ -124,3 +138,4 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
+

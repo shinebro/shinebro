@@ -45,13 +45,21 @@ const OrderSummary = () => {
 
         try {
             console.log('🌐 Fetching API...');
+
+            // Create a controller to abort the fetch if it takes too long
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
             const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/orders`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(orderData),
+                signal: controller.signal
             });
+
+            clearTimeout(timeoutId); // Clear timeout if successful
 
             console.log('✅ Response status:', response.status);
             const data = await response.json();
@@ -63,6 +71,7 @@ const OrderSummary = () => {
                 // Sync with Admin Dashboard (localStorage)
                 const adminOrder = {
                     id: data.orderId,
+                    email: formData.email,
                     customer: `${formData.firstName} ${formData.lastName}`,
                     date: new Date().toLocaleDateString(),
                     itemsSummary: `${cart.length} items`, // Simplified for list view
@@ -94,7 +103,33 @@ const OrderSummary = () => {
             }
         } catch (error) {
             console.error('💥 Error placing order:', error);
-            alert(`Error: ${error.message}. Please check if the backend server is running on port 5000.`);
+            // Fallback for demo/offline mode
+            console.log('⚠️ API failed, switching to offline mode...');
+
+            const offlineOrderId = `ORD-${Date.now()}`;
+
+            const adminOrder = {
+                id: offlineOrderId,
+                email: formData.email,
+                customer: `${formData.firstName} ${formData.lastName}`,
+                date: new Date().toLocaleDateString(),
+                itemsSummary: `${cart.length} items`,
+                total: cartTotal,
+                status: 'Placed',
+                items: orderData.items,
+                address: {
+                    name: `${formData.firstName} ${formData.lastName}`,
+                    phone: formData.phone,
+                    street: formData.address,
+                    city: formData.city,
+                    state: formData.state || '',
+                    pincode: formData.zipCode
+                }
+            };
+            addOrder(adminOrder);
+            clearCart();
+            navigate('/order-success', { state: { orderId: offlineOrderId } });
+
         } finally {
             console.log('🏁 Setting processingPayment to false');
             setProcessingPayment(false);

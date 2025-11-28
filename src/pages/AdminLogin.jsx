@@ -11,7 +11,7 @@ const AdminLogin = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         // Hardcoded credentials for demo
-        if (username === 'Trustedshine' && password === 'Everytime') {
+        if (username === 'admin' && password === 'admin123') {
             // Notify admin of SUCCESSFUL login
             try {
                 await fetch(`${import.meta.env.VITE_API_URL || ''}/api/notify-admin-access`, {

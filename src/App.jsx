@@ -15,6 +15,7 @@ import OrderDetails from './pages/OrderDetails';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminLogin from './pages/AdminLogin';
 import AdminRoute from './components/AdminRoute';
+import PrivateRoute from './components/PrivateRoute';
 import Shop from './pages/Shop';
 import CategoryPage from './pages/CategoryPage';
 import GPayPayment from './pages/GPayPayment';
@@ -38,7 +39,11 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/product/:id" element={<ProductDetail />} />
               <Route path="/cart" element={<Cart />} />
-              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/checkout" element={
+                <PrivateRoute>
+                  <Checkout />
+                </PrivateRoute>
+              } />
               <Route path="/order-summary" element={<OrderSummary />} />
               <Route path="/gpay-payment" element={<GPayPayment />} />
               <Route path="/order-success" element={<OrderSuccess />} />

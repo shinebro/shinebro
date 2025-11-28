@@ -194,6 +194,16 @@ const Signup = () => {
                                     >
                                         Change email or details
                                     </button>
+                                    <div className="mt-4 text-center">
+                                        <button
+                                            type="button"
+                                            onClick={handleSendCode}
+                                            disabled={loading}
+                                            className="text-sm font-medium text-green-600 hover:text-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        >
+                                            {loading ? 'Sending...' : 'Resend Code'}
+                                        </button>
+                                    </div>
                                 </div>
                             )}
 

@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { Lock } from 'lucide-react';
+import { addOrder } from '../utils/orderStorage';
 
 const OrderSummary = () => {
     const location = useLocation();
@@ -58,6 +59,20 @@ const OrderSummary = () => {
 
             if (response.ok && data.success) {
                 console.log('🎉 Order successful! Navigating to success page...');
+
+                // Sync with Admin Dashboard (localStorage)
+                const adminOrder = {
+                    id: data.orderId,
+                    customer: `${formData.firstName} ${formData.lastName}`,
+                    date: new Date().toLocaleDateString(),
+                    itemsSummary: `${cart.length} items`, // Simplified for list view
+                    total: cartTotal,
+                    status: 'Placed',
+                    items: orderData.items, // Full details for order view
+                    deliveryAddress: formData
+                };
+                addOrder(adminOrder);
+
                 // Update user profile with shipping info if logged in
                 if (user) {
                     console.log('👤 Updating user profile...');

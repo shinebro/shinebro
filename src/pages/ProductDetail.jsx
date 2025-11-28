@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Star, ShoppingCart, Zap, Tag, Truck, RotateCcw, ShieldCheck, ChevronRight, Heart } from 'lucide-react';
 
 import { useCart } from '../context/CartContext';
@@ -7,6 +7,7 @@ import { products } from '../data/products';
 
 const ProductDetail = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
     const { addToCart } = useCart();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -39,6 +40,21 @@ const ProductDetail = () => {
             // Ideally show a toast notification here
             alert("Added to cart!");
         }, 500);
+    };
+
+    const handleBuyNow = () => {
+        if (isAdding || !product) return;
+        setIsAdding(true);
+
+        const productToAdd = {
+            ...product,
+            selectedSize: selectedSize,
+            price: selectedSize ? selectedSize.price : product.price
+        };
+
+        addToCart(productToAdd, 1);
+        setIsAdding(false);
+        navigate('/cart');
     };
 
     if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>;
@@ -84,7 +100,10 @@ const ProductDetail = () => {
                                     <ShoppingCart size={20} fill="currentColor" />
                                     {isAdding ? 'Adding...' : 'Add to Cart'}
                                 </button>
-                                <button className="flex-1 bg-[#fb641b] hover:bg-[#f05c17] text-white font-bold py-4 rounded-sm shadow-sm uppercase text-sm md:text-base flex items-center justify-center gap-2 transition-colors">
+                                <button
+                                    onClick={handleBuyNow}
+                                    className="flex-1 bg-[#fb641b] hover:bg-[#f05c17] text-white font-bold py-4 rounded-sm shadow-sm uppercase text-sm md:text-base flex items-center justify-center gap-2 transition-colors"
+                                >
                                     <Zap size={20} fill="currentColor" />
                                     Buy Now
                                 </button>

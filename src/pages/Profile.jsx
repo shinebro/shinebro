@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { User, Mail, MapPin, Phone, LogOut, Save } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { User, Mail, MapPin, Phone, LogOut, Save, Package, ChevronRight } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { getOrders } from '../utils/orderStorage';
 
 const Profile = () => {
     const { user, login, signup, logout, updateProfile } = useAuth();
@@ -24,6 +25,15 @@ const Profile = () => {
         phone: ''
     });
     const [updateSuccess, setUpdateSuccess] = useState(false);
+    const [myOrders, setMyOrders] = useState([]);
+
+    useEffect(() => {
+        const allOrders = getOrders() || [];
+        // In a real app, filter by user ID. For now, we'll show all or filter by name if available.
+        // const userOrders = allOrders.filter(o => o.customer === user?.name); 
+        // For demo purposes, let's just show all orders so the user can see something.
+        setMyOrders(allOrders);
+    }, [user]);
 
     useEffect(() => {
         if (user && user.shippingInfo) {
@@ -269,6 +279,61 @@ const Profile = () => {
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+
+                {/* My Orders Section */}
+                <div className="mt-8 bg-white shadow rounded-2xl overflow-hidden">
+                    <div className="px-6 py-6 border-b border-gray-100">
+                        <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                            <Package className="text-primary" /> My Orders
+                        </h2>
+                    </div>
+                    <div className="divide-y divide-gray-100">
+                        {myOrders.length > 0 ? (
+                            myOrders.map((order) => (
+                                <Link
+                                    to={`/order/${order.id}`}
+                                    key={order.id}
+                                    className="block p-6 hover:bg-gray-50 transition-colors group"
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <div className="h-20 w-20 bg-gray-100 rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden">
+                                            {/* Placeholder for product image since order items might not have full image path in mock data */}
+                                            <Package className="text-gray-400" size={32} />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex justify-between items-start">
+                                                <div>
+                                                    <p className="font-medium text-gray-900 truncate">{order.itemsSummary || 'Order Items'}</p>
+                                                    <p className="text-sm text-gray-500 mt-1">Order ID: {order.id}</p>
+                                                    <p className="text-sm text-gray-500">Ordered on {order.date}</p>
+                                                </div>
+                                                <div className="text-right">
+                                                    <p className="font-bold text-gray-900">₹{order.total}</p>
+                                                </div>
+                                            </div>
+                                            <div className="mt-4 flex items-center gap-2">
+                                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${order.status === 'Delivered' ? 'bg-green-100 text-green-800' :
+                                                        order.status === 'Cancelled' ? 'bg-red-100 text-red-800' :
+                                                            'bg-blue-100 text-blue-800'
+                                                    }`}>
+                                                    {order.status}
+                                                </span>
+                                                {order.status === 'Delivered' && (
+                                                    <span className="text-xs text-gray-500">Delivered on {order.deliveryDate || 'Unknown'}</span>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <ChevronRight className="text-gray-400 group-hover:text-primary transition-colors" />
+                                    </div>
+                                </Link>
+                            ))
+                        ) : (
+                            <div className="p-8 text-center text-gray-500">
+                                No orders found.
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

@@ -51,6 +51,14 @@ const schemas = {
             selectedSize: Joi.string().allow('').optional()
         }).unknown(true)).required(),
         date: Joi.string().optional()
+    }),
+    forgotPassword: Joi.object({
+        email: Joi.string().email().required()
+    }),
+    resetPassword: Joi.object({
+        email: Joi.string().email().required(),
+        code: Joi.string().length(6).required(),
+        newPassword: Joi.string().min(6).required()
     })
 };
 

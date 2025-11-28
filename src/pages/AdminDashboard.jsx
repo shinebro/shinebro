@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Package, Truck, CheckCircle, Clock, AlertCircle, ChevronDown } from 'lucide-react';
+import { Package, Truck, CheckCircle, Clock, AlertCircle, ChevronDown, LogOut } from 'lucide-react';
 import { getOrders, updateOrderStatus } from '../utils/orderStorage';
+import { useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
     const [orders, setOrders] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         setOrders(getOrders());
@@ -28,12 +30,23 @@ const AdminDashboard = () => {
         setOrders(updatedOrders);
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem('isAdmin');
+        navigate('/admin/login');
+    };
+
     return (
         <div className="min-h-screen bg-gray-50 p-6">
             <div className="max-w-7xl mx-auto">
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-                    <div className="flex gap-4">
+                    <div className="flex gap-4 items-center">
+                        <button
+                            onClick={handleLogout}
+                            className="flex items-center gap-2 bg-red-50 text-red-600 px-4 py-2 rounded-lg hover:bg-red-100 transition-colors font-medium"
+                        >
+                            <LogOut size={18} /> Logout
+                        </button>
                         <div className="bg-white p-4 rounded-lg shadow-sm flex items-center gap-3">
                             <div className="p-2 bg-blue-50 rounded-full text-blue-600"><Package size={20} /></div>
                             <div>

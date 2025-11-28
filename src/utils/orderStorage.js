@@ -102,3 +102,10 @@ export const updateOrderStatus = (id, newStatus) => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedOrders));
     return updatedOrders;
 };
+
+export const addOrder = (newOrder) => {
+    const orders = getOrders();
+    const updatedOrders = [newOrder, ...orders];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedOrders));
+    return updatedOrders;
+};

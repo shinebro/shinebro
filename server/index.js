@@ -201,11 +201,66 @@ If this was not you, please investigate immediately.`
     });
 });
 
+// OTP Store (In-memory for demo purposes)
+const otpStore = new Map();
+
+// Generate and Send Verification Code
+app.post('/api/send-verification-code', async (req, res) => {
+    const { email } = req.body;
+
+    // Check if user already exists
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+        return res.status(400).json({ message: 'User already exists with this email' });
+    }
+
+    // Generate 6-digit code
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Store code with expiration (10 minutes)
+    otpStore.set(email, {
+        code,
+        expires: Date.now() + 10 * 60 * 1000
+    });
+
+    const mailOptions = {
+        from: process.env.GMAIL_USER,
+        to: email,
+        subject: 'Your ShineBro Verification Code',
+        text: `Your verification code is: ${code}\n\nThis code will expire in 10 minutes.`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error('Error sending OTP:', error);
+            res.status(500).json({ success: false, message: 'Failed to send verification code' });
+        } else {
+            console.log('OTP sent to:', email);
+            res.json({ success: true, message: 'Verification code sent' });
+        }
+    });
+});
+
 // Authentication Endpoints
 
 // Signup
 app.post('/api/signup', validate(schemas.signup), async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, code } = req.body;
+
+    // Verify OTP
+    const storedOtp = otpStore.get(email);
+    if (!storedOtp) {
+        return res.status(400).json({ message: 'Verification code expired or not found. Please try again.' });
+    }
+
+    if (storedOtp.code !== code) {
+        return res.status(400).json({ message: 'Invalid verification code' });
+    }
+
+    if (Date.now() > storedOtp.expires) {
+        otpStore.delete(email);
+        return res.status(400).json({ message: 'Verification code expired' });
+    }
 
     try {
         const userExists = await User.findOne({ email });
@@ -227,6 +282,9 @@ app.post('/api/signup', validate(schemas.signup), async (req, res) => {
 
         // Generate Token
         const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '24h' });
+
+        // Clear OTP after successful signup
+        otpStore.delete(email);
 
         res.json({
             success: true,

@@ -29,10 +29,12 @@ const Profile = () => {
 
     useEffect(() => {
         const allOrders = getOrders() || [];
-        // In a real app, filter by user ID. For now, we'll show all or filter by name if available.
-        // const userOrders = allOrders.filter(o => o.customer === user?.name); 
-        // For demo purposes, let's just show all orders so the user can see something.
-        setMyOrders(allOrders);
+        if (user && user.email) {
+            const userOrders = allOrders.filter(o => o.email === user.email);
+            setMyOrders(userOrders);
+        } else {
+            setMyOrders([]);
+        }
     }, [user]);
 
     useEffect(() => {
@@ -315,8 +317,8 @@ const Profile = () => {
                                             </div>
                                             <div className="mt-4 flex items-center gap-2">
                                                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${order.status === 'Delivered' ? 'bg-green-100 text-green-800' :
-                                                        order.status === 'Cancelled' ? 'bg-red-100 text-red-800' :
-                                                            'bg-blue-100 text-blue-800'
+                                                    order.status === 'Cancelled' ? 'bg-red-100 text-red-800' :
+                                                        'bg-blue-100 text-blue-800'
                                                     }`}>
                                                     {order.status}
                                                 </span>

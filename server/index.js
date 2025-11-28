@@ -15,6 +15,7 @@ const authenticateToken = require('./middleware/auth');
 const { validate, schemas } = require('./middleware/validate');
 
 const app = express();
+app.set('trust proxy', 1); // Trust first proxy (Vercel)
 const PORT = 5000;
 
 // Connect to Database
@@ -34,8 +35,7 @@ app.use('/api/', limiter);
 // CORS Configuration
 app.use(cors({
     origin: [
-        'http://localhost:5173',
-        'http://localhost:5174',
+       
         'https://shinebro.com',
         'https://www.shinebro.com',
         /\.vercel\.app$/ // Allow all Vercel deployments
@@ -165,6 +165,37 @@ app.post('/api/contact', validate(schemas.contact), (req, res) => {
         } else {
             console.log('Email sent: ' + info.response);
             res.json({ success: true, message: 'Message sent successfully' });
+        }
+    });
+});
+
+// Admin Access Notification Endpoint
+app.post('/api/notify-admin-access', (req, res) => {
+    console.log("Admin access notification request received");
+    const { timestamp, userAgent } = req.body;
+
+    const mailOptions = {
+        from: process.env.GMAIL_USER,
+        to: 'shinebro2@gmail.com', // Explicitly requested by user
+        subject: '⚠️ Security Alert: Admin Login Page Accessed',
+        text: `Security Alert!
+
+Someone has accessed the Admin Login page of ShineBro.
+
+Time: ${timestamp}
+User Agent: ${userAgent}
+
+If this was you, you can ignore this message.
+If this was not you, please investigate immediately.`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log('Error sending alert email:', error);
+            res.status(500).json({ success: false, message: 'Failed to send alert' });
+        } else {
+            console.log('Alert email sent: ' + info.response);
+            res.json({ success: true, message: 'Alert sent successfully' });
         }
     });
 });

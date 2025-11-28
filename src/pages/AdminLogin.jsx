@@ -8,9 +8,11 @@ const AdminLogin = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    useEffect(() => {
-        // Notify admin that login page was accessed
-        const notifyAccess = async () => {
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        // Hardcoded credentials for demo
+        if (username === 'Trusted Shine' && password === 'Every Time') {
+            // Notify admin of SUCCESSFUL login
             try {
                 await fetch(`${import.meta.env.VITE_API_URL || ''}/api/notify-admin-access`, {
                     method: 'POST',
@@ -23,16 +25,9 @@ const AdminLogin = () => {
             } catch (err) {
                 console.error('Failed to send security alert', err);
             }
-        };
 
-        notifyAccess();
-    }, []);
-
-    const handleLogin = (e) => {
-        e.preventDefault();
-        // Hardcoded credentials for demo
-        if (username === 'Trusted Shine' && password === 'Every Time') {
-            localStorage.setItem('isAdmin', 'true');
+            // Use sessionStorage for one-time session (clears on tab close)
+            sessionStorage.setItem('isAdmin', 'true');
             navigate('/admin');
         } else {
             setError('Invalid username or password');
@@ -102,4 +97,3 @@ const AdminLogin = () => {
 };
 
 export default AdminLogin;
-

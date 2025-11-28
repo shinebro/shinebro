@@ -190,7 +190,6 @@ const ProductDetail = () => {
                         <div className="flex gap-12 mb-6">
                             <div className="w-24 text-gray-500 text-sm font-medium">Highlights</div>
                             <ul className="list-disc pl-4 space-y-2 text-sm text-gray-800">
-                                <li>100% Plant-based ingredients</li>
                                 <li>No harsh chemicals or toxins</li>
                                 <li>Biodegradable & Eco-friendly</li>
                                 <li>Safe for babies and pets</li>
@@ -209,8 +208,8 @@ const ProductDetail = () => {
                                     </span>
                                 </div>
                                 <ul className="list-disc pl-4 text-sm text-gray-800">
-                                    <li>7 Days Replacement Policy</li>
-                                    <li>GST invoice available</li>
+                                    <li>24 Hour's Replacement Policy For Undamaged items</li>
+                                    <li>GST invoice Notavailable</li>
                                 </ul>
                             </div>
                         </div>
@@ -221,7 +220,7 @@ const ProductDetail = () => {
                                 <h2 className="text-xl font-medium text-gray-800">Product Description</h2>
                             </div>
                             <div className="p-4 text-sm text-gray-700 leading-relaxed">
-                                <p>{product.description || `Experience the power of nature with our ${product.name}. Formulated with plant-based ingredients, it effectively removes dirt and grime while being gentle on your hands and the environment. This product is designed to provide superior cleaning performance without the use of harmful chemicals. It is safe for use around children and pets, making it the perfect choice for a healthy home.`}</p>
+                                <p>{product.description || `Experience the power of nature with our ${product.name}.it effectively removes dirt and grime while being gentle on your hands and the environment. This product is designed to provide superior cleaning performance without the use of harmful chemicals. It is safe for use around children and pets, making it the perfect choice for a healthy home.`}</p>
                             </div>
                         </div>
 
@@ -242,7 +241,7 @@ const ProductDetail = () => {
                                     </div>
                                     <div className="flex gap-4">
                                         <div className="w-1/3 text-gray-500 text-sm">Fragrance</div>
-                                        <div className="w-2/3 text-sm text-gray-900">Natural Fresh</div>
+                                        <div className="w-2/3 text-sm text-gray-900">Fresh Lemon</div>
                                     </div>
                                     <div className="flex gap-4">
                                         <div className="w-1/3 text-gray-500 text-sm">Type</div>
@@ -318,3 +317,4 @@ const ProductDetail = () => {
 };
 
 export default ProductDetail;
+

@@ -66,11 +66,7 @@ const Checkout = () => {
                                 <Truck className="text-primary" />
                                 <h2 className="text-xl font-bold text-gray-900">Shipping Information</h2>
                             </div>
-                            {!user && (
-                                <button onClick={openAuth} className="text-sm text-primary hover:underline">
-                                    Already have an account? Sign in
-                                </button>
-                            )}
+
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <input

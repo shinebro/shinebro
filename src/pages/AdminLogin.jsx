@@ -11,7 +11,7 @@ const AdminLogin = () => {
     const handleLogin = (e) => {
         e.preventDefault();
         // Hardcoded credentials for demo
-        if (username === 'admin' && password === 'admin123') {
+        if (username === 'Trusted Shine' && password === 'Every Time') {
             localStorage.setItem('isAdmin', 'true');
             navigate('/admin');
         } else {
@@ -82,3 +82,4 @@ const AdminLogin = () => {
 };
 
 export default AdminLogin;
+

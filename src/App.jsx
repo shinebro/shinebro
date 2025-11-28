@@ -24,6 +24,8 @@ import Signup from './pages/Signup';
 import Profile from './pages/Profile';
 import Contact from './pages/Contact';
 import ReturnPolicy from './pages/ReturnPolicy';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import { AuthProvider } from './context/AuthContext';
 
 function App() {
@@ -57,6 +59,8 @@ function App() {
               <Route path="/shop" element={<Shop />} />
               <Route path="/shop/:categoryId" element={<CategoryPage />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/contact" element={<Contact />} />

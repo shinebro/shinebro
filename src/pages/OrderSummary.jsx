@@ -69,7 +69,14 @@ const OrderSummary = () => {
                     total: cartTotal,
                     status: 'Placed',
                     items: orderData.items, // Full details for order view
-                    deliveryAddress: formData
+                    address: {
+                        name: `${formData.firstName} ${formData.lastName}`,
+                        phone: formData.phone,
+                        street: formData.address,
+                        city: formData.city,
+                        state: formData.state || '',
+                        pincode: formData.zipCode
+                    }
                 };
                 addOrder(adminOrder);
 

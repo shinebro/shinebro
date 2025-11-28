@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, User } from 'lucide-react';
 
@@ -8,10 +8,30 @@ const AdminLogin = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
+    useEffect(() => {
+        // Notify admin that login page was accessed
+        const notifyAccess = async () => {
+            try {
+                await fetch(`${import.meta.env.VITE_API_URL || ''}/api/notify-admin-access`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        timestamp: new Date().toLocaleString(),
+                        userAgent: navigator.userAgent
+                    })
+                });
+            } catch (err) {
+                console.error('Failed to send security alert', err);
+            }
+        };
+
+        notifyAccess();
+    }, []);
+
     const handleLogin = (e) => {
         e.preventDefault();
         // Hardcoded credentials for demo
-        if (username === 'Trusted Shine' && password === 'Every Time') {
+        if (username === 'admin' && password === 'admin123') {
             localStorage.setItem('isAdmin', 'true');
             navigate('/admin');
         } else {
@@ -82,4 +102,3 @@ const AdminLogin = () => {
 };
 
 export default AdminLogin;
-

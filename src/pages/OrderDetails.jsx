@@ -1,49 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { CheckCircle, Package, Truck, MapPin, ChevronRight, Star, Download, HelpCircle } from 'lucide-react';
-import { products } from '../data/products';
+import { ChevronRight, Star, Download, HelpCircle } from 'lucide-react';
+import { getOrderById } from '../utils/orderStorage';
 
 const OrderDetails = () => {
     const { orderId } = useParams();
     const [order, setOrder] = useState(null);
 
     useEffect(() => {
-        // Mock order data
-        const mockOrder = {
-            id: orderId || 'OD123456789012345',
-            date: 'Fri, Nov 24, 2023',
-            total: 599,
-            status: 'Delivered',
-            deliveryDate: 'Sun, Nov 26',
-            address: {
-                name: 'Nishant Kumar',
-                phone: '9876543210',
-                street: '123, ShineBro Street, Tech Park',
-                city: 'Bangalore',
-                state: 'Karnataka',
-                pincode: '560103'
-            },
-            items: [
-                {
-                    ...products[0], // Use the first product as a mock item
-                    quantity: 1,
-                    price: 499,
-                    status: 'Delivered',
-                    deliveryDate: 'Sun, Nov 26'
-                }
-            ],
-            tracking: [
-                { status: 'Order Placed', date: 'Fri, 24 Nov', completed: true },
-                { status: 'Packed', date: 'Sat, 25 Nov', completed: true },
-                { status: 'Shipped', date: 'Sat, 25 Nov', completed: true },
-                { status: 'Out for Delivery', date: 'Sun, 26 Nov', completed: true },
-                { status: 'Delivered', date: 'Sun, 26 Nov', completed: true }
-            ]
-        };
-        setOrder(mockOrder);
+        const fetchedOrder = getOrderById(orderId);
+        if (fetchedOrder) {
+            // Calculate tracking steps based on status
+            const allStatuses = ['Placed', 'Packed', 'Shipped', 'Out for Delivery', 'Delivered'];
+            const currentStatusIndex = allStatuses.indexOf(fetchedOrder.status);
+
+            const trackingSteps = [
+                { status: 'Order Placed', date: fetchedOrder.date, completed: currentStatusIndex >= 0 },
+                { status: 'Packed', date: '', completed: currentStatusIndex >= 1 },
+                { status: 'Shipped', date: '', completed: currentStatusIndex >= 2 },
+                { status: 'Out for Delivery', date: '', completed: currentStatusIndex >= 3 },
+                { status: 'Delivered', date: '', completed: currentStatusIndex >= 4 }
+            ];
+
+            setOrder({ ...fetchedOrder, tracking: trackingSteps });
+        }
     }, [orderId]);
 
-    if (!order) return <div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>;
+    if (!order) return <div className="min-h-screen flex items-center justify-center text-xl">Order not found</div>;
 
     return (
         <div className="bg-gray-100 min-h-screen py-6">

@@ -9,6 +9,11 @@ const AdminDashboard = () => {
 
     useEffect(() => {
         setOrders(getOrders());
+
+        // Cleanup function: Clear session when component unmounts (user leaves page)
+        return () => {
+            sessionStorage.removeItem('isAdmin');
+        };
     }, []);
 
     const statusOptions = ['Placed', 'Packed', 'Shipped', 'Out for Delivery', 'Delivered', 'Cancelled'];
@@ -31,7 +36,7 @@ const AdminDashboard = () => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('isAdmin');
+        sessionStorage.removeItem('isAdmin');
         navigate('/admin/login');
     };
 

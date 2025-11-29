@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import ScrollToTop from './components/ScrollToTop';
 import AuthSidebar from './components/AuthSidebar';
@@ -58,10 +58,10 @@ function App() {
               } />
               <Route path="/shop" element={<Shop />} />
               <Route path="/shop/:categoryId" element={<CategoryPage />} />
-              <Route path="/login" element={<Login />} />
+              <Route path="/login" element={<Navigate to="/profile" replace />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/signup" element={<Signup />} />
+              <Route path="/signup" element={<Navigate to="/profile" replace />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/return-policy" element={<ReturnPolicy />} />

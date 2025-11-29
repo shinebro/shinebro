@@ -83,15 +83,15 @@ app.post('/api/orders', validate(schemas.order), async (req, res) => {
     console.log("Received order:", orderData);
 
     try {
-        // Generate unique order ID using timestamp + random/counter
+        // Generate unique order ID using timestamp + random string to avoid race conditions
         const date = new Date();
         const dateStr = date.getFullYear().toString() +
             (date.getMonth() + 1).toString().padStart(2, '0') +
             date.getDate().toString().padStart(2, '0');
 
-        // Simple random suffix for now, or could use countDocuments for sequential
-        const count = await Order.countDocuments();
-        const orderId = `ORD-${dateStr}-${(count + 1).toString().padStart(4, '0')}`;
+        // Use a random string instead of countDocuments to prevent duplicate IDs in concurrent requests
+        const randomSuffix = Math.random().toString(36).substring(2, 6).toUpperCase();
+        const orderId = `ORD-${dateStr}-${randomSuffix}`;
 
         const newOrder = new Order({
             orderId,
@@ -136,15 +136,19 @@ Order Date: ${new Date().toLocaleString()}`
 
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
-                console.log('Error sending email:', error);
+                console.error('Error sending email:', error);
             } else {
                 console.log('Email sent: ' + info.response);
             }
         });
 
     } catch (error) {
-        console.error('Order creation error:', error);
-        res.status(500).json({ success: false, message: 'Failed to place order' });
+        console.error('Order creation error details:', error); // Enhanced logging
+        if (error.code === 11000) {
+            // Handle duplicate key error specifically if it still happens (unlikely with random suffix)
+            return res.status(500).json({ success: false, message: 'Order ID collision, please try again.' });
+        }
+        res.status(500).json({ success: false, message: 'Failed to place order', error: error.message });
     }
 });
 
@@ -453,7 +457,7 @@ app.use((err, req, res, next) => {
 // Vercel handles the server startup automatically
 if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
     app.listen(PORT, () => {
-        console.log(`Server running on http://localhost:${PORT}`);
+        console.log(`Server running on http://shinebro.com`);
     });
 }
 

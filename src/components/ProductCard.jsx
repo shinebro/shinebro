@@ -51,10 +51,14 @@ const ProductCard = ({ product }) => {
 
                 <button
                     onClick={handleAddToCart}
-                    disabled={isAdding}
-                    className={`absolute bottom-3 right-3 p-2 rounded-full shadow-md transition-all transform translate-y-10 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 duration-300 ${isAdded ? 'bg-green-500 text-white' : 'bg-primary text-white hover:bg-green-700'
+                    disabled={isAdding || product.inStock === false}
+                    className={`absolute bottom-3 right-3 p-2 rounded-full shadow-md transition-all transform translate-y-10 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 duration-300 ${product.inStock === false
+                        ? 'bg-gray-400 cursor-not-allowed'
+                        : isAdded
+                            ? 'bg-green-500 text-white'
+                            : 'bg-primary text-white hover:bg-green-700'
                         }`}
-                    title="Add to Cart"
+                    title={product.inStock === false ? "Available Soon" : "Add to Cart"}
                 >
                     {isAdding ? (
                         <Loader2 size={20} className="animate-spin" />
@@ -85,11 +89,21 @@ const ProductCard = ({ product }) => {
                     <span className="font-bold text-lg text-gray-900">₹{product.price}</span>
                     <button
                         onClick={handleAddToCart}
-                        disabled={isAdding}
-                        className={`text-sm font-medium hover:underline transition-colors ${isAdded ? 'text-green-600' : 'text-primary'
+                        disabled={isAdding || product.inStock === false}
+                        className={`text-sm font-medium hover:underline transition-colors ${product.inStock === false
+                            ? 'text-gray-400 cursor-not-allowed no-underline'
+                            : isAdded
+                                ? 'text-green-600'
+                                : 'text-primary'
                             }`}
                     >
-                        {isAdding ? 'Adding...' : isAdded ? 'Added to Cart!' : 'Add to Cart'}
+                        {product.inStock === false
+                            ? 'Available Soon'
+                            : isAdding
+                                ? 'Adding...'
+                                : isAdded
+                                    ? 'Added to Cart!'
+                                    : 'Add to Cart'}
                     </button>
                 </div>
             </div>

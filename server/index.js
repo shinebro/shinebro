@@ -20,7 +20,9 @@ app.set('trust proxy', 1); // Trust first proxy (Vercel)
 const PORT = 5000;
 
 // Connect to Database
-connectDB();
+// Connect to Database
+// connectDB(); // Moved to startup function
+
 
 // Security Headers
 app.use(helmet());
@@ -36,6 +38,8 @@ app.use('/api/', limiter);
 // CORS Configuration
 app.use(cors({
     origin: [
+        'http://localhost:5173',
+        'http://localhost:5174',
         'https://shinebro.com',
         'https://www.shinebro.com',
         /\.vercel\.app$/ // Allow all Vercel deployments
@@ -465,10 +469,13 @@ app.use((err, req, res, next) => {
 // Start server if not running in a serverless environment (like Vercel)
 // Vercel handles the server startup automatically
 if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
-    app.listen(PORT, () => {
-        console.log(`Server running on http://localhost:${PORT}`);
-    });
+    const startServer = async () => {
+        await connectDB();
+        app.listen(PORT, () => {
+            console.log(`Server running on http://localhost:${PORT}`);
+        });
+    };
+    startServer();
 }
 
 module.exports = app;
-

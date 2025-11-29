@@ -8,6 +8,7 @@ export const products = [
         rating: 4.8,
         reviews: 120,
         isNew: true,
+        inStock: false,
     },
     {
         id: 2,
@@ -18,6 +19,7 @@ export const products = [
         rating: 4.7,
         reviews: 85,
         isNew: false,
+        inStock: true,
         sizes: [
             { size: "1L", price: 120 },
             { size: "2L", price: 210 },
@@ -33,6 +35,7 @@ export const products = [
         rating: 4.9,
         reviews: 200,
         isNew: true,
+        inStock: false,
     },
     {
         id: 4,
@@ -43,5 +46,6 @@ export const products = [
         rating: 4.6,
         reviews: 50,
         isNew: false,
+        inStock: false,
     },
 ];

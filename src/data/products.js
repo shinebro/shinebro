@@ -48,4 +48,15 @@ export const products = [
         isNew: false,
         inStock: false,
     },
+    {
+        id: 5,
+        name: "Toilet Cleaner",
+        price: 249,
+        image: "/images/toilet-cleaner.jpg",
+        category: "Bathroom",
+        rating: 4.5,
+        reviews: 45,
+        isNew: true,
+        inStock: false,
+    },
 ];

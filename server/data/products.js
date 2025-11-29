@@ -8,6 +8,7 @@ const products = [
         rating: 4.8,
         reviews: 120,
         isNew: true,
+        inStock: false,
     },
     {
         id: 2,
@@ -18,6 +19,7 @@ const products = [
         rating: 4.7,
         reviews: 85,
         isNew: false,
+        inStock: true,
     },
     {
         id: 3,
@@ -28,6 +30,7 @@ const products = [
         rating: 4.9,
         reviews: 200,
         isNew: true,
+        inStock: false,
     },
     {
         id: 4,
@@ -38,6 +41,7 @@ const products = [
         rating: 4.6,
         reviews: 50,
         isNew: false,
+        inStock: false,
     },
     {
         id: 5,
@@ -48,6 +52,7 @@ const products = [
         rating: 4.5,
         reviews: 45,
         isNew: true,
+        inStock: false,
     },
     {
         id: 6,
@@ -58,6 +63,7 @@ const products = [
         rating: 4.8,
         reviews: 150,
         isNew: false,
+        inStock: false,
     }
 ];
 

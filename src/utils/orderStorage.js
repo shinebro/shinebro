@@ -1,6 +1,7 @@
 import { products } from '../data/products';
 
 const STORAGE_KEY = 'shinebro_orders';
+const initialOrders = [];
 
 
 

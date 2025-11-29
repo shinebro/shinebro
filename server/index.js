@@ -20,8 +20,7 @@ app.set('trust proxy', 1); // Trust first proxy (Vercel)
 const PORT = 5000;
 
 // Connect to Database
-// Connect to Database
-// connectDB(); // Moved to startup function
+// connectDB(); // Moved to middleware/startup logic
 
 
 // Security Headers
@@ -49,6 +48,21 @@ app.use(cors({
 }));
 
 app.use(express.json());
+
+// Database Connection Middleware
+app.use(async (req, res, next) => {
+    // Skip for static files or if already connected
+    if (mongoose.connection.readyState === 1) {
+        return next();
+    }
+    try {
+        await connectDB();
+        next();
+    } catch (error) {
+        console.error("Database connection failed in middleware:", error);
+        res.status(503).json({ message: 'Service Unavailable: Database connection failed' });
+    }
+});
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '../dist')));
@@ -470,10 +484,14 @@ app.use((err, req, res, next) => {
 // Vercel handles the server startup automatically
 if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
     const startServer = async () => {
-        await connectDB();
-        app.listen(PORT, () => {
-            console.log(`Server running on http://localhost:${PORT}`);
-        });
+        try {
+            await connectDB();
+            app.listen(PORT, () => {
+                console.log(`Server running on http://localhost:${PORT}`);
+            });
+        } catch (error) {
+            console.error("Failed to start server:", error);
+        }
     };
     startServer();
 }

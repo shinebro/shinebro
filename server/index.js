@@ -1,4 +1,5 @@
 const path = require('path');
+const mongoose = require('mongoose');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express = require('express');
 const cors = require('cors');
@@ -338,6 +339,11 @@ app.post('/api/reset-password', validate(schemas.resetPassword), async (req, res
 app.post('/api/signup', validate(schemas.signup), async (req, res) => {
     const { name, email, password, code } = req.body;
 
+    // Check Database Connection
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).json({ message: 'Database not connected. Please try again later.' });
+    }
+
     // Verify OTP
     const storedOtp = otpStore.get(email);
     if (!storedOtp) {
@@ -392,6 +398,11 @@ app.post('/api/signup', validate(schemas.signup), async (req, res) => {
 app.post('/api/login', validate(schemas.login), async (req, res) => {
     const { email, password } = req.body;
 
+    // Check Database Connection
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).json({ message: 'Database not connected. Please try again later.' });
+    }
+
     try {
         const user = await User.findOne({ email });
 
@@ -415,8 +426,8 @@ app.post('/api/login', validate(schemas.login), async (req, res) => {
             res.status(401).json({ message: 'Invalid credentials' });
         }
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
+        console.error('LOGIN ERROR DETAILS:', error);
+        res.status(500).json({ message: `Server error: ${error.message}` });
     }
 });
 
@@ -457,7 +468,7 @@ app.use((err, req, res, next) => {
 // Vercel handles the server startup automatically
 if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
     app.listen(PORT, () => {
-        console.log(`Server running on http://shinebro.com`);
+        console.log(`Server running on http://localhost:${PORT}`);
     });
 }
 

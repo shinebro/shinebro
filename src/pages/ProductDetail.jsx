@@ -114,17 +114,29 @@ const ProductDetail = () => {
                             <div className="flex gap-3 mt-6">
                                 <button
                                     onClick={handleAddToCart}
-                                    className="flex-1 bg-[#ff9f00] hover:bg-[#f39700] text-white font-bold py-4 rounded-sm shadow-sm uppercase text-sm md:text-base flex items-center justify-center gap-2 transition-colors"
+                                    disabled={isAdding || product.inStock === false}
+                                    className={`flex-1 font-bold py-4 rounded-sm shadow-sm uppercase text-sm md:text-base flex items-center justify-center gap-2 transition-colors ${product.inStock === false
+                                        ? 'bg-gray-400 cursor-not-allowed text-white'
+                                        : 'bg-[#ff9f00] hover:bg-[#f39700] text-white'
+                                        }`}
                                 >
                                     <ShoppingCart size={20} fill="currentColor" />
-                                    {isAdding ? 'Adding...' : 'Add to Cart'}
+                                    {product.inStock === false
+                                        ? 'Available Soon'
+                                        : isAdding
+                                            ? 'Adding...'
+                                            : 'Add to Cart'}
                                 </button>
                                 <button
                                     onClick={handleBuyNow}
-                                    className="flex-1 bg-[#fb641b] hover:bg-[#f05c17] text-white font-bold py-4 rounded-sm shadow-sm uppercase text-sm md:text-base flex items-center justify-center gap-2 transition-colors"
+                                    disabled={isAdding || product.inStock === false}
+                                    className={`flex-1 font-bold py-4 rounded-sm shadow-sm uppercase text-sm md:text-base flex items-center justify-center gap-2 transition-colors ${product.inStock === false
+                                        ? 'bg-gray-300 cursor-not-allowed text-gray-500'
+                                        : 'bg-[#fb641b] hover:bg-[#f05c17] text-white'
+                                        }`}
                                 >
                                     <Zap size={20} fill="currentColor" />
-                                    Buy Now
+                                    {product.inStock === false ? 'Out of Stock' : 'Buy Now'}
                                 </button>
                             </div>
                         </div>

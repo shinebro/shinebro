@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { User, Mail, MapPin, Phone, LogOut, Save, Package, ChevronRight, UserPlus, Lock, Sparkles, KeyRound } from 'lucide-react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { getOrders } from '../utils/orderStorage';
 
 const Profile = () => {
     const { user, login, signup, logout, updateProfile } = useAuth();
     console.log("Profile render, user:", user);
     const navigate = useNavigate();
+    const location = useLocation();
     const [activeTab, setActiveTab] = useState('login');
 
     // Auth Form State
@@ -56,7 +57,14 @@ const Profile = () => {
         e.preventDefault();
         setAuthError('');
         const result = await login(authEmail, authPassword);
-        if (!result.success) setAuthError(result.message);
+        if (result.success) {
+            const from = location.state?.from?.pathname || '/profile';
+            if (from !== '/profile') {
+                navigate(from);
+            }
+        } else {
+            setAuthError(result.message);
+        }
     };
 
     const handleSendCode = async (e) => {
@@ -100,7 +108,13 @@ const Profile = () => {
             if (data.success) {
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('user', JSON.stringify(data.user));
-                window.location.reload();
+
+                const from = location.state?.from?.pathname || '/profile';
+                if (from !== '/profile') {
+                    window.location.href = from;
+                } else {
+                    window.location.reload();
+                }
             } else {
                 setAuthError(data.message || 'Signup failed');
             }

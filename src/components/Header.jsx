@@ -126,7 +126,7 @@ const Header = () => {
                                 </Link>
                             ) : (
                                 <Link
-                                    to="/signup"
+                                    to="/profile"
                                     className="flex items-center gap-2 text-gray-600 hover:text-primary md:bg-gradient-to-r md:from-green-600 md:to-emerald-600 md:hover:from-green-700 md:hover:to-emerald-700 md:text-white md:font-semibold md:px-4 md:py-2 md:rounded-lg transition-all transform md:hover:scale-105"
                                 >
                                     <Sparkles size={22} className="hidden md:block" />
@@ -182,7 +182,7 @@ const Header = () => {
                                 <Link to="/contact" className="text-gray-600 hover:text-primary font-medium" onClick={() => setIsMenuOpen(false)}>Contact</Link>
                                 {!user && (
                                     <Link
-                                        to="/login"
+                                        to="/profile"
                                         onClick={() => setIsMenuOpen(false)}
                                         className="text-left text-gray-600 hover:text-primary font-medium"
                                     >

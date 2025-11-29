@@ -24,7 +24,9 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/login`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify({ email, password }),
             });
             const data = await response.json();
@@ -38,13 +40,8 @@ export const AuthProvider = ({ children }) => {
                 return { success: false, message: data.message };
             }
         } catch (error) {
-            console.warn("Login API failed, using mock user for development");
-            const mockUser = { name: "Test User", email: email, shippingInfo: {} };
-            setUser(mockUser);
-            localStorage.setItem('user', JSON.stringify(mockUser));
-            localStorage.setItem('token', 'mock-token');
-            closeAuth();
-            return { success: true };
+            console.error("Login failed", error);
+            return { success: false, message: "Network error or server unavailable." };
         }
     };
 
@@ -52,7 +49,9 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/signup`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify({ name, email, password }),
             });
             const data = await response.json();
@@ -66,13 +65,8 @@ export const AuthProvider = ({ children }) => {
                 return { success: false, message: data.message };
             }
         } catch (error) {
-            console.warn("Signup API failed, using mock user for development");
-            const mockUser = { name: name, email: email, shippingInfo: {} };
-            setUser(mockUser);
-            localStorage.setItem('user', JSON.stringify(mockUser));
-            localStorage.setItem('token', 'mock-token');
-            closeAuth();
-            return { success: true };
+            console.error("Signup failed", error);
+            return { success: false, message: "Network error or server unavailable." };
         }
     };
 

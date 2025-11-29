@@ -14,6 +14,25 @@ const ProductDetail = () => {
     const [selectedSize, setSelectedSize] = useState(null);
     const [isAdding, setIsAdding] = useState(false);
     const [pincode, setPincode] = useState('');
+    const [availabilityMessage, setAvailabilityMessage] = useState('');
+    const [isAvailable, setIsAvailable] = useState(false);
+
+    const allowedPincodes = ['400601', '400602', '400603', '400604'];
+
+    const checkPincode = () => {
+        if (!pincode) {
+            setAvailabilityMessage('Please enter a pincode');
+            setIsAvailable(false);
+            return;
+        }
+        if (allowedPincodes.includes(pincode)) {
+            setAvailabilityMessage('Delivery available!');
+            setIsAvailable(true);
+        } else {
+            setAvailabilityMessage('Not available for this pincode');
+            setIsAvailable(false);
+        }
+    };
 
     useEffect(() => {
         const productData = products.find(p => p.id === parseInt(id));
@@ -145,168 +164,176 @@ const ProductDetail = () => {
                         <div className="flex gap-12 mb-6">
                             <div className="w-24 text-gray-500 text-sm font-medium">Delivery</div>
                             <div className="flex-1">
-                                <div className="flex items-center gap-2 border-b-2 border-blue-600 w-max pb-1 mb-2">
-                                    <div className="text-gray-500"><Truck size={18} /></div>
-                                    <input
-                                        type="text"
-                                        placeholder="Enter Delivery Pincode"
-                                        value={pincode}
-                                        onChange={(e) => setPincode(e.target.value)}
-                                        className="outline-none text-sm font-medium text-gray-900 placeholder-gray-400 w-40"
-                                    />
-                                    <button className="text-blue-600 font-bold text-sm">Check</button>
-                                </div>
-                                <div className="text-sm">
-                                    <span className="font-bold text-gray-900">Delivery by {new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</span>
-                                    <span className="text-gray-400 mx-2">|</span>
-                                    <span className="text-green-600 font-medium">Free</span>
-                                    <span className="text-gray-500 line-through text-xs ml-1">₹40</span>
-                                </div>
+                                <div className="text-gray-500"><Truck size={18} /></div>
+                                <input
+                                    type="text"
+                                    placeholder="Enter Delivery Pincode"
+                                    value={pincode}
+                                    onChange={(e) => setPincode(e.target.value)}
+                                    className="outline-none text-sm font-medium text-gray-900 placeholder-gray-400 w-40"
+                                />
+                                <button onClick={checkPincode} className="text-blue-600 font-bold text-sm">Check</button>
+                            </div>
+                            <div className="text-sm">
+                                {availabilityMessage && (
+                                    <p className={`font-medium mb-1 ${isAvailable ? 'text-green-600' : 'text-red-600'}`}>
+                                        {availabilityMessage}
+                                    </p>
+                                )}
+                                {isAvailable && (
+                                    <>
+                                        <span className="font-bold text-gray-900">Delivery by {new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</span>
+                                        <span className="text-gray-400 mx-2">|</span>
+                                        <span className="text-green-600 font-medium">Free</span>
+                                        <span className="text-gray-500 line-through text-xs ml-1">₹40</span>
+                                    </>
+                                )}
                             </div>
                         </div>
+                    </div>
 
-                        {/* Size Selection */}
-                        {product.sizes && product.sizes.length > 0 && (
-                            <div className="flex gap-12 mb-6">
-                                <div className="w-24 text-gray-500 text-sm font-medium mt-2">Size</div>
-                                <div className="flex gap-2 flex-wrap">
-                                    {product.sizes.map((sizeOption, index) => (
-                                        <button
-                                            key={index}
-                                            onClick={() => setSelectedSize(sizeOption)}
-                                            className={`px-4 py-2 border-2 rounded-sm text-sm font-bold transition-all ${selectedSize && selectedSize.size === sizeOption.size
-                                                ? 'border-blue-600 text-blue-600 bg-blue-50'
-                                                : 'border-gray-300 text-gray-800 hover:border-blue-600'
-                                                }`}
-                                        >
-                                            {sizeOption.size}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Highlights */}
+                    {/* Size Selection */}
+                    {product.sizes && product.sizes.length > 0 && (
                         <div className="flex gap-12 mb-6">
-                            <div className="w-24 text-gray-500 text-sm font-medium">Highlights</div>
-                            <ul className="list-disc pl-4 space-y-2 text-sm text-gray-800">
-                                <li>No harsh chemicals or toxins</li>
-                                <li>Biodegradable & Eco-friendly</li>
-                                <li>Safe for babies and pets</li>
-                                <li>Effective stain removal</li>
+                            <div className="w-24 text-gray-500 text-sm font-medium mt-2">Size</div>
+                            <div className="flex gap-2 flex-wrap">
+                                {product.sizes.map((sizeOption, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => setSelectedSize(sizeOption)}
+                                        className={`px-4 py-2 border-2 rounded-sm text-sm font-bold transition-all ${selectedSize && selectedSize.size === sizeOption.size
+                                            ? 'border-blue-600 text-blue-600 bg-blue-50'
+                                            : 'border-gray-300 text-gray-800 hover:border-blue-600'
+                                            }`}
+                                    >
+                                        {sizeOption.size}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Highlights */}
+                    <div className="flex gap-12 mb-6">
+                        <div className="w-24 text-gray-500 text-sm font-medium">Highlights</div>
+                        <ul className="list-disc pl-4 space-y-2 text-sm text-gray-800">
+                            <li>100% Plant-based ingredients</li>
+                            <li>No harsh chemicals or toxins</li>
+                            <li>Biodegradable & Eco-friendly</li>
+                            <li>Safe for babies and pets</li>
+                            <li>Effective stain removal</li>
+                        </ul>
+                    </div>
+
+                    {/* Seller */}
+                    <div className="flex gap-12 mb-8">
+                        <div className="w-24 text-gray-500 text-sm font-medium">Seller</div>
+                        <div>
+                            <div className="flex items-center gap-2 mb-1">
+                                <span className="text-blue-600 font-bold text-sm">ShineBro Official</span>
+                                <span className="bg-blue-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
+                                    4.9 <Star size={8} fill="currentColor" />
+                                </span>
+                            </div>
+                            <ul className="list-disc pl-4 text-sm text-gray-800">
+                                <li>7 Days Replacement Policy</li>
+                                <li>GST invoice available</li>
                             </ul>
                         </div>
+                    </div>
 
-                        {/* Seller */}
-                        <div className="flex gap-12 mb-8">
-                            <div className="w-24 text-gray-500 text-sm font-medium">Seller</div>
-                            <div>
-                                <div className="flex items-center gap-2 mb-1">
-                                    <span className="text-blue-600 font-bold text-sm">ShineBro Official</span>
-                                    <span className="bg-blue-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
-                                        4.9 <Star size={8} fill="currentColor" />
-                                    </span>
+                    {/* Description */}
+                    <div className="border border-gray-200 rounded-sm mb-6">
+                        <div className="p-4 border-b border-gray-200">
+                            <h2 className="text-xl font-medium text-gray-800">Product Description</h2>
+                        </div>
+                        <div className="p-4 text-sm text-gray-700 leading-relaxed">
+                            <p>{product.description || `Experience the power of nature with our ${product.name}. Formulated with plant-based ingredients, it effectively removes dirt and grime while being gentle on your hands and the environment. This product is designed to provide superior cleaning performance without the use of harmful chemicals. It is safe for use around children and pets, making it the perfect choice for a healthy home.`}</p>
+                        </div>
+                    </div>
+
+                    {/* Specifications */}
+                    <div className="border border-gray-200 rounded-sm">
+                        <div className="p-4 border-b border-gray-200">
+                            <h2 className="text-xl font-medium text-gray-800">Specifications</h2>
+                        </div>
+                        <div className="p-4">
+                            <div className="grid grid-cols-1 gap-4">
+                                <div className="flex gap-4">
+                                    <div className="w-1/3 text-gray-500 text-sm">In The Box</div>
+                                    <div className="w-2/3 text-sm text-gray-900">1 {product.name}</div>
                                 </div>
-                                <ul className="list-disc pl-4 text-sm text-gray-800">
-                                    <li>24 Hour's Replacement Policy For Undamaged items</li>
-                                    <li>GST invoice Notavailable</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        {/* Description */}
-                        <div className="border border-gray-200 rounded-sm mb-6">
-                            <div className="p-4 border-b border-gray-200">
-                                <h2 className="text-xl font-medium text-gray-800">Product Description</h2>
-                            </div>
-                            <div className="p-4 text-sm text-gray-700 leading-relaxed">
-                                <p>{product.description || `Experience the power of nature with our ${product.name}.it effectively removes dirt and grime while being gentle on your hands and the environment. This product is designed to provide superior cleaning performance without the use of harmful chemicals. It is safe for use around children and pets, making it the perfect choice for a healthy home.`}</p>
-                            </div>
-                        </div>
-
-                        {/* Specifications */}
-                        <div className="border border-gray-200 rounded-sm">
-                            <div className="p-4 border-b border-gray-200">
-                                <h2 className="text-xl font-medium text-gray-800">Specifications</h2>
-                            </div>
-                            <div className="p-4">
-                                <div className="grid grid-cols-1 gap-4">
-                                    <div className="flex gap-4">
-                                        <div className="w-1/3 text-gray-500 text-sm">In The Box</div>
-                                        <div className="w-2/3 text-sm text-gray-900">1 {product.name}</div>
-                                    </div>
-                                    <div className="flex gap-4">
-                                        <div className="w-1/3 text-gray-500 text-sm">Brand</div>
-                                        <div className="w-2/3 text-sm text-gray-900">ShineBro</div>
-                                    </div>
-                                    <div className="flex gap-4">
-                                        <div className="w-1/3 text-gray-500 text-sm">Fragrance</div>
-                                        <div className="w-2/3 text-sm text-gray-900">Fresh Lemon</div>
-                                    </div>
-                                    <div className="flex gap-4">
-                                        <div className="w-1/3 text-gray-500 text-sm">Type</div>
-                                        <div className="w-2/3 text-sm text-gray-900">{product.category}</div>
-                                    </div>
+                                <div className="flex gap-4">
+                                    <div className="w-1/3 text-gray-500 text-sm">Brand</div>
+                                    <div className="w-2/3 text-sm text-gray-900">ShineBro</div>
+                                </div>
+                                <div className="flex gap-4">
+                                    <div className="w-1/3 text-gray-500 text-sm">Fragrance</div>
+                                    <div className="w-2/3 text-sm text-gray-900">Natural Fresh</div>
+                                </div>
+                                <div className="flex gap-4">
+                                    <div className="w-1/3 text-gray-500 text-sm">Type</div>
+                                    <div className="w-2/3 text-sm text-gray-900">{product.category}</div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        {/* Ratings & Reviews */}
-                        <div className="mt-8 border border-gray-200 rounded-sm">
-                            <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-                                <h2 className="text-xl font-medium text-gray-800">Ratings & Reviews</h2>
-                                <button className="shadow-md border border-gray-300 px-4 py-2 text-sm font-medium rounded-sm hover:shadow-lg transition-shadow">Rate Product</button>
-                            </div>
-                            <div className="p-6">
-                                <div className="flex gap-8 mb-8">
-                                    <div className="text-center">
-                                        <div className="text-3xl font-bold text-gray-900 flex items-center justify-center gap-1">
-                                            {product.rating} <Star size={24} fill="currentColor" className="text-gray-900" />
-                                        </div>
-                                        <div className="text-gray-500 text-sm mt-1">{product.reviews} Ratings & Reviews</div>
+                    {/* Ratings & Reviews */}
+                    <div className="mt-8 border border-gray-200 rounded-sm">
+                        <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+                            <h2 className="text-xl font-medium text-gray-800">Ratings & Reviews</h2>
+                            <button className="shadow-md border border-gray-300 px-4 py-2 text-sm font-medium rounded-sm hover:shadow-lg transition-shadow">Rate Product</button>
+                        </div>
+                        <div className="p-6">
+                            <div className="flex gap-8 mb-8">
+                                <div className="text-center">
+                                    <div className="text-3xl font-bold text-gray-900 flex items-center justify-center gap-1">
+                                        {product.rating} <Star size={24} fill="currentColor" className="text-gray-900" />
                                     </div>
-                                    <div className="flex-1 space-y-1">
-                                        {[5, 4, 3, 2, 1].map((star) => (
-                                            <div key={star} className="flex items-center gap-2 text-xs">
-                                                <span className="w-3 font-bold">{star}</span> <Star size={10} className="text-gray-400" />
-                                                <div className="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden">
-                                                    <div
-                                                        className={`h-full ${star >= 4 ? 'bg-green-500' : star === 3 ? 'bg-yellow-500' : 'bg-red-500'}`}
-                                                        style={{ width: `${star === 5 ? 70 : star === 4 ? 20 : 5}%` }}
-                                                    ></div>
-                                                </div>
-                                                <span className="text-gray-400 w-6 text-right">{star === 5 ? 85 : star === 4 ? 25 : 5}</span>
-                                            </div>
-                                        ))}
-                                    </div>
+                                    <div className="text-gray-500 text-sm mt-1">{product.reviews} Ratings & Reviews</div>
                                 </div>
-
-                                {/* Individual Reviews */}
-                                <div className="space-y-6">
-                                    {[
-                                        { name: "Sarah Johnson", rating: 5, text: "Absolutely love the laundry liquid! It smells amazing and cleans so well without any harsh chemicals. Highly recommend!", date: "Oct 2023" },
-                                        { name: "Michael Chen", rating: 5, text: "The floor cleaner is a game changer. Safe for my pets and leaves no sticky residue. Will definitely buy again.", date: "Sep 2023" }
-                                    ].map((review, i) => (
-                                        <div key={i} className="border-b border-gray-100 last:border-0 pb-6 last:pb-0">
-                                            <div className="flex items-center gap-2 mb-2">
-                                                <span className={`text-white text-xs font-bold px-1.5 py-0.5 rounded-sm flex items-center gap-0.5 ${review.rating >= 4 ? 'bg-green-600' : 'bg-yellow-500'}`}>
-                                                    {review.rating} <Star size={8} fill="currentColor" />
-                                                </span>
-                                                <span className="font-medium text-gray-900">{review.text.substring(0, 20)}...</span>
+                                <div className="flex-1 space-y-1">
+                                    {[5, 4, 3, 2, 1].map((star) => (
+                                        <div key={star} className="flex items-center gap-2 text-xs">
+                                            <span className="w-3 font-bold">{star}</span> <Star size={10} className="text-gray-400" />
+                                            <div className="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden">
+                                                <div
+                                                    className={`h-full ${star >= 4 ? 'bg-green-500' : star === 3 ? 'bg-yellow-500' : 'bg-red-500'}`}
+                                                    style={{ width: `${star === 5 ? 70 : star === 4 ? 20 : 5}%` }}
+                                                ></div>
                                             </div>
-                                            <p className="text-sm text-gray-700 mb-3">{review.text}</p>
-                                            <div className="flex items-center justify-between text-xs text-gray-500">
-                                                <div className="flex items-center gap-2">
-                                                    <span className="font-medium text-gray-600">{review.name}</span>
-                                                    <div className="flex items-center gap-0.5 text-gray-400">
-                                                        <ShieldCheck size={12} /> Verified Buyer
-                                                    </div>
-                                                </div>
-                                                <span>{review.date}</span>
-                                            </div>
+                                            <span className="text-gray-400 w-6 text-right">{star === 5 ? 85 : star === 4 ? 25 : 5}</span>
                                         </div>
                                     ))}
                                 </div>
+                            </div>
+
+                            {/* Individual Reviews */}
+                            <div className="space-y-6">
+                                {[
+                                    { name: "Sarah Johnson", rating: 5, text: "Absolutely love the laundry liquid! It smells amazing and cleans so well without any harsh chemicals. Highly recommend!", date: "Oct 2023" },
+                                    { name: "Michael Chen", rating: 5, text: "The floor cleaner is a game changer. Safe for my pets and leaves no sticky residue. Will definitely buy again.", date: "Sep 2023" }
+                                ].map((review, i) => (
+                                    <div key={i} className="border-b border-gray-100 last:border-0 pb-6 last:pb-0">
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <span className={`text-white text-xs font-bold px-1.5 py-0.5 rounded-sm flex items-center gap-0.5 ${review.rating >= 4 ? 'bg-green-600' : 'bg-yellow-500'}`}>
+                                                {review.rating} <Star size={8} fill="currentColor" />
+                                            </span>
+                                            <span className="font-medium text-gray-900">{review.text.substring(0, 20)}...</span>
+                                        </div>
+                                        <p className="text-sm text-gray-700 mb-3">{review.text}</p>
+                                        <div className="flex items-center justify-between text-xs text-gray-500">
+                                            <div className="flex items-center gap-2">
+                                                <span className="font-medium text-gray-600">{review.name}</span>
+                                                <div className="flex items-center gap-0.5 text-gray-400">
+                                                    <ShieldCheck size={12} /> Verified Buyer
+                                                </div>
+                                            </div>
+                                            <span>{review.date}</span>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -317,4 +344,3 @@ const ProductDetail = () => {
 };
 
 export default ProductDetail;
-

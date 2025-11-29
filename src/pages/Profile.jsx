@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { User, Mail, MapPin, Phone, LogOut, Save, Package, ChevronRight } from 'lucide-react';
+import { User, Mail, MapPin, Phone, LogOut, Save, Package, ChevronRight, UserPlus, Lock, Sparkles, KeyRound } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { getOrders } from '../utils/orderStorage';
 
 const Profile = () => {
     const { user, login, signup, logout, updateProfile } = useAuth();
+    console.log("Profile render, user:", user);
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('login');
 
@@ -14,6 +15,9 @@ const Profile = () => {
     const [authPassword, setAuthPassword] = useState('');
     const [authName, setAuthName] = useState('');
     const [authError, setAuthError] = useState('');
+    const [verificationCode, setVerificationCode] = useState('');
+    const [step, setStep] = useState('details'); // 'details' or 'verification'
+    const [loading, setLoading] = useState(false);
 
     // Profile Form State
     const [profileData, setProfileData] = useState({
@@ -55,11 +59,56 @@ const Profile = () => {
         if (!result.success) setAuthError(result.message);
     };
 
+    const handleSendCode = async (e) => {
+        e.preventDefault();
+        setAuthError('');
+        setLoading(true);
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/send-verification-code`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: authEmail })
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                setStep('verification');
+            } else {
+                setAuthError(data.message || 'Failed to send verification code');
+            }
+        } catch (err) {
+            setAuthError('Failed to connect to server');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleSignup = async (e) => {
         e.preventDefault();
         setAuthError('');
-        const result = await signup(authName, authEmail, authPassword);
-        if (!result.success) setAuthError(result.message);
+        setLoading(true);
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/signup`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: authName, email: authEmail, password: authPassword, code: verificationCode })
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                window.location.reload();
+            } else {
+                setAuthError(data.message || 'Signup failed');
+            }
+        } catch (err) {
+            setAuthError('Failed to connect to server');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleUpdateProfile = async (e) => {
@@ -128,38 +177,70 @@ const Profile = () => {
                             </button>
                         </form>
                     ) : (
-                        <form className="mt-8 space-y-6" onSubmit={handleSignup}>
-                            <div className="rounded-md shadow-sm -space-y-px">
-                                <input
-                                    type="text"
-                                    required
-                                    className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
-                                    placeholder="Full Name"
-                                    value={authName}
-                                    onChange={(e) => setAuthName(e.target.value)}
-                                />
-                                <input
-                                    type="email"
-                                    required
-                                    className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
-                                    placeholder="Email address"
-                                    value={authEmail}
-                                    onChange={(e) => setAuthEmail(e.target.value)}
-                                />
-                                <input
-                                    type="password"
-                                    required
-                                    className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
-                                    placeholder="Password"
-                                    value={authPassword}
-                                    onChange={(e) => setAuthPassword(e.target.value)}
-                                />
-                            </div>
+                        <form className="mt-8 space-y-6" onSubmit={step === 'details' ? handleSendCode : handleSignup}>
+                            {step === 'details' ? (
+                                <div className="rounded-md shadow-sm -space-y-px">
+                                    <input
+                                        type="text"
+                                        required
+                                        className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
+                                        placeholder="Full Name"
+                                        value={authName}
+                                        onChange={(e) => setAuthName(e.target.value)}
+                                    />
+                                    <input
+                                        type="email"
+                                        required
+                                        className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
+                                        placeholder="Email address"
+                                        value={authEmail}
+                                        onChange={(e) => setAuthEmail(e.target.value)}
+                                    />
+                                    <input
+                                        type="password"
+                                        required
+                                        className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
+                                        placeholder="Password"
+                                        value={authPassword}
+                                        onChange={(e) => setAuthPassword(e.target.value)}
+                                    />
+                                </div>
+                            ) : (
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Verification Code sent to {authEmail}
+                                    </label>
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <KeyRound className="h-5 w-5 text-gray-400" />
+                                        </div>
+                                        <input
+                                            required
+                                            className="appearance-none block w-full pl-10 px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm tracking-widest"
+                                            placeholder="Enter 6-digit code"
+                                            value={verificationCode}
+                                            onChange={(e) => setVerificationCode(e.target.value)}
+                                            maxLength={6}
+                                        />
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => setStep('details')}
+                                        className="mt-2 text-sm text-primary hover:text-green-700"
+                                    >
+                                        Change email or details
+                                    </button>
+                                </div>
+                            )}
+
                             <button
                                 type="submit"
-                                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                                disabled={loading}
+                                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-70"
                             >
-                                Create Account
+                                {loading ? 'Processing...' : (
+                                    step === 'details' ? 'Send Verification Code' : 'Verify & Create Account'
+                                )}
                             </button>
                         </form>
                     )}

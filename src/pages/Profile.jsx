@@ -26,7 +26,7 @@ const Profile = () => {
         lastName: '',
         address: '',
         city: '',
-        zipCode: '',
+        pinCode: '',
         phone: ''
     });
     const [updateSuccess, setUpdateSuccess] = useState(false);
@@ -296,11 +296,7 @@ const Profile = () => {
                             </button>
                         </div>
 
-                        {updateSuccess && (
-                            <div className="mb-6 bg-green-50 text-green-700 p-4 rounded-lg flex items-center gap-2">
-                                <Save size={18} /> Profile updated successfully!
-                            </div>
-                        )}
+
 
                         <form onSubmit={handleUpdateProfile} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-1">
@@ -375,6 +371,11 @@ const Profile = () => {
                                     <Save size={20} /> Save Changes
                                 </button>
                             </div>
+                            {updateSuccess && (
+                                <div className="md:col-span-2 mt-4 bg-green-50 text-green-700 p-4 rounded-lg flex items-center gap-2">
+                                    <Save size={18} /> Profile updated successfully!
+                                </div>
+                            )}
                         </form>
                     </div>
                 </div>

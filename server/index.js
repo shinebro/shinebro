@@ -257,9 +257,7 @@ app.post('/api/send-verification-code', async (req, res) => {
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.error('Error sending OTP:', error);
-            // For development: Log code and return success even if email fails
-            console.log('⚠️ Email failed. USE THIS CODE:', code);
-            res.json({ success: true, message: 'Verification code generated (check console)', devCode: code });
+            res.status(500).json({ success: false, message: 'Failed to send verification code. Please check email configuration.' });
         } else {
             console.log('OTP sent to:', email);
             res.json({ success: true, message: 'Verification code sent' });
@@ -460,6 +458,15 @@ app.post('/api/update-profile', authenticateToken, async (req, res) => {
 
         if (user) {
             user.shippingInfo = shippingInfo;
+
+            // Also update the main name field if provided in shipping info
+            if (shippingInfo.firstName || shippingInfo.lastName) {
+                const newName = `${shippingInfo.firstName || ''} ${shippingInfo.lastName || ''}`.trim();
+                if (newName) {
+                    user.name = newName;
+                }
+            }
+
             await user.save();
             res.json({ success: true, user: { id: user._id, name: user.name, email: user.email, shippingInfo: user.shippingInfo } });
         } else {

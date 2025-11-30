@@ -1,7 +1,6 @@
 import React from 'react';
 
 const benefits = [
-    { icon: "🌿", title: "Plant Based", desc: "Made from natural ingredients" },
 
     { icon: "🐾", title: "Pet Friendly", desc: "Safe for your furry friends" },
     { icon: "🚫", title: "Toxin Free", desc: "No harsh chemicals or bleach" },
@@ -14,7 +13,7 @@ const WhyChooseUs = () => {
                 <div className="text-center mb-12">
                     <h2 className="text-3xl font-bold text-gray-900 mb-4">Why ShineBro?</h2>
                     <p className="text-gray-600 max-w-2xl mx-auto">
-                        We believe in cleaning without compromising on safety. Our products are tough on dirt but gentle on your home and the planet.
+                        We believe in cleaning without compromising on safety. Our products are tough on dirt but gentle on your home.
                     </p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -32,3 +31,4 @@ const WhyChooseUs = () => {
 };
 
 export default WhyChooseUs;
+

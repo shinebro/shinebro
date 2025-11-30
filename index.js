@@ -1,4 +1,5 @@
 const path = require('path');
+const mongoose = require('mongoose');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express = require('express');
 const cors = require('cors');
@@ -19,7 +20,8 @@ app.set('trust proxy', 1); // Trust first proxy (Vercel)
 const PORT = 5000;
 
 // Connect to Database
-connectDB();
+// connectDB(); // Moved to middleware/startup logic
+
 
 // Security Headers
 app.use(helmet());
@@ -46,6 +48,21 @@ app.use(cors({
 }));
 
 app.use(express.json());
+
+// Database Connection Middleware
+app.use(async (req, res, next) => {
+    // Skip for static files or if already connected
+    if (mongoose.connection.readyState === 1) {
+        return next();
+    }
+    try {
+        await connectDB();
+        next();
+    } catch (error) {
+        console.error("Database connection failed in middleware:", error);
+        res.status(503).json({ message: 'Service Unavailable: Database connection failed' });
+    }
+});
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '../dist')));
@@ -83,15 +100,15 @@ app.post('/api/orders', validate(schemas.order), async (req, res) => {
     console.log("Received order:", orderData);
 
     try {
-        // Generate unique order ID using timestamp + random/counter
+        // Generate unique order ID using timestamp + random string to avoid race conditions
         const date = new Date();
         const dateStr = date.getFullYear().toString() +
             (date.getMonth() + 1).toString().padStart(2, '0') +
             date.getDate().toString().padStart(2, '0');
 
-        // Simple random suffix for now, or could use countDocuments for sequential
-        const count = await Order.countDocuments();
-        const orderId = `ORD-${dateStr}-${(count + 1).toString().padStart(4, '0')}`;
+        // Use a random string instead of countDocuments to prevent duplicate IDs in concurrent requests
+        const randomSuffix = Math.random().toString(36).substring(2, 6).toUpperCase();
+        const orderId = `ORD-${dateStr}-${randomSuffix}`;
 
         const newOrder = new Order({
             orderId,
@@ -136,15 +153,19 @@ Order Date: ${new Date().toLocaleString()}`
 
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
-                console.log('Error sending email:', error);
+                console.error('Error sending email:', error);
             } else {
                 console.log('Email sent: ' + info.response);
             }
         });
 
     } catch (error) {
-        console.error('Order creation error:', error);
-        res.status(500).json({ success: false, message: 'Failed to place order' });
+        console.error('Order creation error details:', error); // Enhanced logging
+        if (error.code === 11000) {
+            // Handle duplicate key error specifically if it still happens (unlikely with random suffix)
+            return res.status(500).json({ success: false, message: 'Order ID collision, please try again.' });
+        }
+        res.status(500).json({ success: false, message: 'Failed to place order', error: error.message });
     }
 });
 
@@ -170,11 +191,190 @@ app.post('/api/contact', validate(schemas.contact), (req, res) => {
     });
 });
 
+// Admin Access Notification Endpoint
+app.post('/api/notify-admin-access', (req, res) => {
+    console.log("Admin access notification request received");
+    console.log("Attempting to send email from:", process.env.GMAIL_USER);
+    const { timestamp, userAgent } = req.body;
+
+    const mailOptions = {
+        from: process.env.GMAIL_USER,
+        to: 'shinebrofficial2@gmail.com', // Updated to correct email
+        subject: '⚠️ Security Alert: Admin Login Page Accessed',
+        text: `Security Alert!
+
+Someone has accessed the Admin Login page of ShineBro.
+
+Time: ${timestamp}
+User Agent: ${userAgent}
+
+If this was you, you can ignore this message.
+If this was not you, please investigate immediately.`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error('CRITICAL ERROR sending alert email:', error);
+            res.status(500).json({ success: false, message: 'Failed to send alert', error: error.message });
+        } else {
+            console.log('Alert email sent successfully!');
+            console.log('Response:', info.response);
+            res.json({ success: true, message: 'Alert sent successfully' });
+        }
+    });
+});
+
+// OTP Store (In-memory for demo purposes)
+const otpStore = new Map();
+
+// Generate and Send Verification Code
+app.post('/api/send-verification-code', async (req, res) => {
+    const { email } = req.body;
+
+    // Check if user already exists
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+        return res.status(400).json({ message: 'User already exists with this email' });
+    }
+
+    // Generate 6-digit code
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Store code with expiration (10 minutes)
+    otpStore.set(email, {
+        code,
+        expires: Date.now() + 10 * 60 * 1000
+    });
+    console.log(`🔐 GENERATED OTP for ${email}: ${code}`);
+
+    const mailOptions = {
+        from: process.env.GMAIL_USER,
+        to: email,
+        subject: 'Your ShineBro Verification Code',
+        text: `Your verification code is: ${code}\n\nThis code will expire in 10 minutes.`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error('Error sending OTP:', error);
+            res.status(500).json({ success: false, message: 'Failed to send verification code. Please check email configuration.' });
+        } else {
+            console.log('OTP sent to:', email);
+            res.json({ success: true, message: 'Verification code sent' });
+        }
+    });
+});
+
+// Forgot Password - Request OTP
+app.post('/api/forgot-password', validate(schemas.forgotPassword), async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Generate 6-digit code
+        const code = Math.floor(100000 + Math.random() * 900000).toString();
+
+        // Store code with expiration (10 minutes)
+        otpStore.set(email, {
+            code,
+            expires: Date.now() + 10 * 60 * 1000
+        });
+
+        const mailOptions = {
+            from: process.env.GMAIL_USER,
+            to: email,
+            subject: 'ShineBro Password Reset Code',
+            text: `Your password reset code is: ${code}\n\nThis code will expire in 10 minutes.`
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error sending OTP:', error);
+                res.status(500).json({ success: false, message: 'Failed to send reset code' });
+            } else {
+                console.log('Reset OTP sent to:', email);
+                res.json({ success: true, message: 'Reset code sent' });
+            }
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// Reset Password
+app.post('/api/reset-password', validate(schemas.resetPassword), async (req, res) => {
+    const { email, code, newPassword } = req.body;
+
+    // Verify OTP
+    const storedOtp = otpStore.get(email);
+    if (!storedOtp) {
+        return res.status(400).json({ message: 'Reset code expired or not found. Please request a new one.' });
+    }
+
+    if (storedOtp.code !== code) {
+        return res.status(400).json({ message: 'Invalid reset code' });
+    }
+
+    if (Date.now() > storedOtp.expires) {
+        otpStore.delete(email);
+        return res.status(400).json({ message: 'Reset code expired' });
+    }
+
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Hash new password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        user.password = hashedPassword;
+        await user.save();
+
+        // Clear OTP
+        otpStore.delete(email);
+
+        res.json({ success: true, message: 'Password reset successfully' });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
 // Authentication Endpoints
 
 // Signup
 app.post('/api/signup', validate(schemas.signup), async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, code } = req.body;
+
+    // Check Database Connection
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).json({ message: 'Database not connected. Please try again later.' });
+    }
+
+    // Verify OTP
+    const storedOtp = otpStore.get(email);
+    if (!storedOtp) {
+        return res.status(400).json({ message: 'Verification code expired or not found. Please try again.' });
+    }
+
+    if (storedOtp.code !== code) {
+        return res.status(400).json({ message: 'Invalid verification code' });
+    }
+
+    if (Date.now() > storedOtp.expires) {
+        otpStore.delete(email);
+        return res.status(400).json({ message: 'Verification code expired' });
+    }
 
     try {
         const userExists = await User.findOne({ email });
@@ -197,6 +397,9 @@ app.post('/api/signup', validate(schemas.signup), async (req, res) => {
         // Generate Token
         const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '24h' });
 
+        // Clear OTP after successful signup
+        otpStore.delete(email);
+
         res.json({
             success: true,
             token,
@@ -211,6 +414,11 @@ app.post('/api/signup', validate(schemas.signup), async (req, res) => {
 // Login
 app.post('/api/login', validate(schemas.login), async (req, res) => {
     const { email, password } = req.body;
+
+    // Check Database Connection
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).json({ message: 'Database not connected. Please try again later.' });
+    }
 
     try {
         const user = await User.findOne({ email });
@@ -235,8 +443,8 @@ app.post('/api/login', validate(schemas.login), async (req, res) => {
             res.status(401).json({ message: 'Invalid credentials' });
         }
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
+        console.error('LOGIN ERROR DETAILS:', error);
+        res.status(500).json({ message: `Server error: ${error.message}` });
     }
 });
 
@@ -276,9 +484,17 @@ app.use((err, req, res, next) => {
 // Start server if not running in a serverless environment (like Vercel)
 // Vercel handles the server startup automatically
 if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
-    app.listen(PORT, () => {
-        console.log(`Server running on http://localhost:${PORT}`);
-    });
+    const startServer = async () => {
+        try {
+            await connectDB();
+            app.listen(PORT, () => {
+                console.log(`Server running on http://localhost:${PORT}`);
+            });
+        } catch (error) {
+            console.error("Failed to start server:", error);
+        }
+    };
+    startServer();
 }
 
 module.exports = app;

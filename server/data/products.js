@@ -13,7 +13,7 @@ const products = [
     {
         id: 2,
         name: "Dishwashing Liquid",
-        price: 299,
+        price: 210,
         image: "/images/dishwash-liquid-new.jpg",
         category: "Kitchen",
         rating: 4.7,
@@ -46,7 +46,7 @@ const products = [
     {
         id: 5,
         name: "Toilet Cleaner",
-        price: 249,
+        price: 120,
         image: "/images/toilet-cleaner.jpg",
         category: "Bathroom",
         rating: 4.5,
@@ -57,7 +57,7 @@ const products = [
     {
         id: 6,
         name: "Hand Wash Rose",
-        price: 199,
+        price: 99,
         image: "https://placehold.co/400x400/e2e8f0/1e293b?text=Hand+Wash",
         category: "HandWash",
         rating: 4.8,
@@ -68,3 +68,4 @@ const products = [
 ];
 
 module.exports = products;
+

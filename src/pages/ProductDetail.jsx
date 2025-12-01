@@ -94,7 +94,7 @@ const ProductDetail = () => {
                             <div className="flex flex-col-reverse md:flex-row gap-4 h-[450px]">
                                 {/* Thumbnails */}
                                 <div className="flex md:flex-col gap-2 overflow-auto md:w-16 hide-scrollbar">
-                                    {[...Array(5)].map((_, i) => (
+                                    {[...Array(3)].map((_, i) => (
                                         <div key={i} className={`border p-1 cursor-pointer hover:border-blue-600 rounded-sm h-16 w-16 flex-shrink-0 ${i === 0 ? 'border-blue-600' : 'border-gray-200'}`}>
                                             <img src={product.image} alt="Thumbnail" className="w-full h-full object-contain" />
                                         </div>
@@ -248,8 +248,8 @@ const ProductDetail = () => {
                                 </span>
                             </div>
                             <ul className="list-disc pl-4 text-sm text-gray-800">
-                                <li>7 Days Replacement Policy</li>
-                                <li>GST invoice available</li>
+                                <li>24 hour's replacement policy for undamaged product</li>
+                                <li>GST invoice Not available</li>
                             </ul>
                         </div>
                     </div>
@@ -323,29 +323,7 @@ const ProductDetail = () => {
 
                             {/* Individual Reviews */}
                             <div className="space-y-6">
-                                {[
-                                    { name: "Sarah Johnson", rating: 5, text: "Absolutely love the laundry liquid! It smells amazing and cleans so well without any harsh chemicals. Highly recommend!", date: "Oct 2023" },
-                                    { name: "Michael Chen", rating: 5, text: "The floor cleaner is a game changer. Safe for my pets and leaves no sticky residue. Will definitely buy again.", date: "Sep 2023" }
-                                ].map((review, i) => (
-                                    <div key={i} className="border-b border-gray-100 last:border-0 pb-6 last:pb-0">
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <span className={`text-white text-xs font-bold px-1.5 py-0.5 rounded-sm flex items-center gap-0.5 ${review.rating >= 4 ? 'bg-green-600' : 'bg-yellow-500'}`}>
-                                                {review.rating} <Star size={8} fill="currentColor" />
-                                            </span>
-                                            <span className="font-medium text-gray-900">{review.text.substring(0, 20)}...</span>
-                                        </div>
-                                        <p className="text-sm text-gray-700 mb-3">{review.text}</p>
-                                        <div className="flex items-center justify-between text-xs text-gray-500">
-                                            <div className="flex items-center gap-2">
-                                                <span className="font-medium text-gray-600">{review.name}</span>
-                                                <div className="flex items-center gap-0.5 text-gray-400">
-                                                    <ShieldCheck size={12} /> Verified Buyer
-                                                </div>
-                                            </div>
-                                            <span>{review.date}</span>
-                                        </div>
-                                    </div>
-                                ))}
+                                <p className="text-gray-500 text-sm italic">No reviews yet.</p>
                             </div>
                         </div>
                     </div>

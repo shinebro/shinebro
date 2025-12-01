@@ -2,7 +2,7 @@ const products = [
     {
         id: 1,
         name: "Natural Laundry Liquid",
-        price: 499,
+        price: 250,
         image: "/images/laundry-liquid.png",
         category: "Laundry",
         rating: 4.8,
@@ -13,8 +13,8 @@ const products = [
     {
         id: 2,
         name: "Dishwashing Liquid",
-        price: 210,
-        image: "/images/dishwash-liquid-new.jpg",
+        price: 120,
+        image: "/images/dishwash-liquid.jpg",
         category: "Kitchen",
         rating: 4.7,
         reviews: 85,
@@ -24,7 +24,7 @@ const products = [
     {
         id: 3,
         name: "Floor Cleaner",
-        price: 349,
+        price: 90,
         image: "https://placehold.co/400x400/e2e8f0/1e293b?text=Floor+Cleaner",
         category: "Floor",
         rating: 4.9,
@@ -35,7 +35,7 @@ const products = [
     {
         id: 4,
         name: "Fabric Conditioner",
-        price: 399,
+        price: 99,
         image: "https://placehold.co/400x400/e2e8f0/1e293b?text=Fabric+Cond",
         category: "Laundry",
         rating: 4.6,
@@ -68,4 +68,3 @@ const products = [
 ];
 
 module.exports = products;
-

@@ -127,7 +127,7 @@ const ProductDetail = () => {
                         <div className="sticky top-24">
                             <div className="flex flex-col-reverse md:flex-row gap-4 h-[450px]">
                                 {/* Thumbnails */}
-                                <div className="flex md:flex-col gap-2 overflow-auto md:w-16 hide-scrollbar">
+                                <div className="flex md:flex-col gap-2 overflow-auto md:w-16 no-scrollbar">
                                     {productImages.map((img, i) => (
                                         <div
                                             key={i}

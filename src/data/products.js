@@ -13,7 +13,7 @@ export const products = [
     {
         id: 2,
         name: "Liquid Dishwash",
-        price: 210,
+        price: 120,
         image: "/images/dishwash-product.jpg",
         category: "Kitchen",
         rating: 4.7,
@@ -29,24 +29,32 @@ export const products = [
     {
         id: 3,
         name: "Floor Cleaner",
-        price: 349,
+        price: 120,
         image: "https://placehold.co/400x400/e2e8f0/1e293b?text=Floor+Cleaner",
         category: "Floor",
         rating: 4.9,
         reviews: 200,
         isNew: true,
         inStock: false,
+        sizes: [
+            { size: "1L", price: 120 },
+            { size: "2L", price: 210 },
+            { size: "5L", price: 399 }
     },
     {
         id: 4,
         name: "Fabric Conditioner",
-        price: 399,
+        price: 120,
         image: "https://placehold.co/400x400/e2e8f0/1e293b?text=Fabric+Cond",
         category: "Laundry",
         rating: 4.6,
         reviews: 50,
         isNew: false,
         inStock: false,
+        sizes: [
+            { size: "1L", price: 120 },
+            { size: "2L", price: 210 },
+            { size: "5L", price: 399 }
     },
     {
         id: 5,
@@ -58,6 +66,9 @@ export const products = [
         reviews: 45,
         isNew: true,
         inStock: false,
+        sizes: [
+            { size: "1L", price: 120 },
+            { size: "2L", price: 210 },
+            { size: "5L", price: 399 }
     },
 ];
-

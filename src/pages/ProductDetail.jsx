@@ -469,12 +469,7 @@ const ProductDetail = () => {
                             </div>
                         </div>
                     </div>
-                    {/* DEBUG INFO */}
-                    <div className="mt-4 p-4 bg-gray-200 text-xs font-mono">
-                        <p>Product ID: {id}</p>
-                        <p>Current Index: {currentImageIndex}</p>
-                        <p>Images: {JSON.stringify(productImages)}</p>
-                    </div>
+
                 </div>
             </div>
         </div>

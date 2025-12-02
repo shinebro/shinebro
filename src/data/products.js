@@ -2,7 +2,7 @@ export const products = [
     {
         id: 1,
         name: "Natural Laundry Liquid",
-        price: 499,
+        price: 120,
         image: "/images/laundry-liquid.png",
         category: "Laundry",
         rating: 4.8,
@@ -10,9 +10,9 @@ export const products = [
         isNew: true,
         inStock: false,
         sizes: [
-            { size: "1L", price: 299 },
-            { size: "2L", price: 499 },
-            { size: "5L", price: 1099 }
+            { size: "1L", price: 120 },
+            { size: "2L", price: 210 },
+            { size: "5L", price: 399 }
         ]
     },
     {
@@ -76,7 +76,8 @@ export const products = [
         sizes: [
             { size: "1L", price: 120 },
             { size: "2L", price: 210 },
-            { size: "5L", price: 39* }
+            { size: "5L", price: 399 }
         ]
     },
 ];
+

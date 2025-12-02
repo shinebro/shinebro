@@ -26,7 +26,7 @@ const Cart = () => {
                 {/* Cart Items */}
                 <div className="lg:w-2/3 space-y-4 sm:space-y-6">
                     {cart.map(item => (
-                        <div key={item.id} className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <div key={item.id} className="relative flex flex-col sm:flex-row items-center gap-4 sm:gap-6 bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-gray-100">
                             <img src={item.image} alt={item.name} className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-xl" />
 
                             <div className="flex-1 text-center sm:text-left w-full sm:w-auto">

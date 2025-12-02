@@ -296,7 +296,7 @@ const ProductDetail = () => {
                         <div className="flex flex-col sm:flex-row gap-4 sm:gap-12 mb-6">
                             <div className="w-24 text-gray-500 text-sm font-medium">Highlights</div>
                             <ul className="list-disc pl-4 space-y-2 text-sm text-gray-800">
-                                <li>100% Plant-based ingredients</li>
+
                                 <li>No harsh chemicals or toxins</li>
                                 <li>Biodegradable & Eco-friendly</li>
                                 <li>Safe for babies and pets</li>

@@ -36,6 +36,11 @@ export const products = [
         reviews: 200,
         isNew: true,
         inStock: false,
+        sizes: [
+            { size: "1L", price: 120 },
+            { size: "2L", price: 210 },
+            { size: "5L", price: 399 }
+            ]
     },
     {
         id: 4,
@@ -47,6 +52,11 @@ export const products = [
         reviews: 50,
         isNew: false,
         inStock: false,
+        sizes: [
+            { size: "1L", price: 120 },
+            { size: "2L", price: 210 },
+            { size: "5L", price: 399 }
+            ]
     },
     {
         id: 5,
@@ -58,5 +68,11 @@ export const products = [
         reviews: 45,
         isNew: true,
         inStock: false,
+        sizes: [
+            { size: "1L", price: 120 },
+            { size: "2L", price: 210 },
+            { size: "5L", price: 399 }
+            ]
     },
 ];
+

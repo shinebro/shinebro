@@ -9,6 +9,11 @@ export const products = [
         reviews: 120,
         isNew: true,
         inStock: false,
+        sizes: [
+            { size: "1L", price: 299 },
+            { size: "2L", price: 499 },
+            { size: "5L", price: 1099 }
+        ]
     },
     {
         id: 2,
@@ -29,7 +34,7 @@ export const products = [
     {
         id: 3,
         name: "Floor Cleaner",
-        price: 349,
+        price: 120,
         image: "https://placehold.co/400x400/e2e8f0/1e293b?text=Floor+Cleaner",
         category: "Floor",
         rating: 4.9,
@@ -40,12 +45,12 @@ export const products = [
             { size: "1L", price: 120 },
             { size: "2L", price: 210 },
             { size: "5L", price: 399 }
-            ]
+        ]
     },
     {
         id: 4,
         name: "Fabric Conditioner",
-        price: 399,
+        price: 120,
         image: "https://placehold.co/400x400/e2e8f0/1e293b?text=Fabric+Cond",
         category: "Laundry",
         rating: 4.6,
@@ -56,12 +61,12 @@ export const products = [
             { size: "1L", price: 120 },
             { size: "2L", price: 210 },
             { size: "5L", price: 399 }
-            ]
+        ]
     },
     {
         id: 5,
         name: "Toilet Cleaner",
-        price: 249,
+        price: 120,
         image: "/images/toilet-cleaner.jpg",
         category: "Bathroom",
         rating: 4.5,
@@ -71,8 +76,7 @@ export const products = [
         sizes: [
             { size: "1L", price: 120 },
             { size: "2L", price: 210 },
-            { size: "5L", price: 399 }
-            ]
+            { size: "5L", price: 39* }
+        ]
     },
 ];
-

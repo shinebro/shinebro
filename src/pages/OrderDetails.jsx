@@ -71,9 +71,9 @@ const OrderDetails = () => {
                         <div className="bg-white shadow-sm rounded-sm p-4">
                             <h3 className="font-medium text-gray-900 mb-3">Delivery Address</h3>
                             <div className="text-sm">
-                                <p className="font-bold mb-1">{order.address?.name || 'N/A'}</p>
-                                <p className="text-gray-600 mb-1">{order.address?.street || ''}</p>
-                                <p className="text-gray-600 mb-1">{order.address?.city || ''}, {order.address?.state || ''} - {order.address?.pincode || ''}</p>
+                                <p className="font-bold mb-1">{order.address?.firstName} {order.address?.lastName}</p>
+                                <p className="text-gray-600 mb-1">{order.address?.address || ''}</p>
+                                <p className="text-gray-600 mb-1">{order.address?.city || ''}, {order.address?.zipCode || ''}</p>
                                 <p className="font-bold mt-2">Phone number</p>
                                 <p className="text-gray-600">{order.address?.phone || 'N/A'}</p>
                             </div>

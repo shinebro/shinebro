@@ -12,8 +12,8 @@ const AdminDashboard = () => {
         setLoading(true);
         setError(null);
         try {
-            console.log('Fetching orders from http://localhost:5000/api/orders...');
-            const response = await fetch('http://localhost:5000/api/orders');
+            console.log('Fetching orders from /api/orders...');
+            const response = await fetch('/api/orders');
             if (response.ok) {
                 const data = await response.json();
                 console.log('AdminDashboard: Fetched orders:', data);
@@ -55,7 +55,7 @@ const AdminDashboard = () => {
 
     const handleStatusChange = async (orderId, newStatus) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/orders/${orderId}`, {
+            const response = await fetch(`/api/orders/${orderId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ const AdminDashboard = () => {
     const handleDeleteOrder = async (orderId) => {
         if (window.confirm('Are you sure you want to delete this order? This action cannot be undone.')) {
             try {
-                const response = await fetch(`http://localhost:5000/api/orders/${orderId}`, {
+                const response = await fetch(`/api/orders/${orderId}`, {
                     method: 'DELETE',
                 });
 

@@ -169,6 +169,72 @@ Order Date: ${new Date().toLocaleString()}`
     }
 });
 
+// Get all orders (Admin)
+app.get('/api/orders', async (req, res) => {
+    try {
+        const orders = await Order.find().sort({ createdAt: -1 });
+
+        // Transform data to match frontend expectations if necessary
+        // The frontend expects: id, customer (name), date, itemsSummary, total, status
+        const formattedOrders = orders.map(order => ({
+            id: order.orderId,
+            customer: `${order.customer.firstName} ${order.customer.lastName}`,
+            date: new Date(order.createdAt).toLocaleDateString(),
+            itemsSummary: order.items.map(i => `${i.name} (${i.quantity})`).join(', '),
+            total: order.total,
+            status: order.status,
+            // Keep original object for details if needed
+            original: order
+        }));
+
+        res.json(formattedOrders);
+    } catch (error) {
+        console.error('Error fetching orders:', error);
+        res.status(500).json({ message: 'Failed to fetch orders' });
+    }
+});
+
+// Update order status (Admin)
+app.put('/api/orders/:id', async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    try {
+        const order = await Order.findOneAndUpdate(
+            { orderId: id },
+            { status: status },
+            { new: true }
+        );
+
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        res.json({ success: true, message: 'Order status updated', order });
+    } catch (error) {
+        console.error('Error updating order:', error);
+        res.status(500).json({ message: 'Failed to update order' });
+    }
+});
+
+// Delete order (Admin)
+app.delete('/api/orders/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const order = await Order.findOneAndDelete({ orderId: id });
+
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        res.json({ success: true, message: 'Order deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting order:', error);
+        res.status(500).json({ message: 'Failed to delete order' });
+    }
+});
+
 // Contact Form Endpoint
 app.post('/api/contact', validate(schemas.contact), (req, res) => {
     const { name, email, message } = req.body;

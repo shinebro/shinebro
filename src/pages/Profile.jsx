@@ -365,7 +365,13 @@ const Profile = () => {
                                         type="tel"
                                         name="phone"
                                         value={profileData.phone}
-                                        onChange={handleInputChange}
+                                        maxLength="10"
+                                        pattern="\d{10}"
+                                        title="Please enter exactly 10 digits"
+                                        onChange={(e) => {
+                                            const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                                            setProfileData(prev => ({ ...prev, phone: val }));
+                                        }}
                                         className="w-full pl-10 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
                                     />
                                 </div>

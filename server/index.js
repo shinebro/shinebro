@@ -220,6 +220,7 @@ app.get('/api/orders/:id', async (req, res) => {
             customer: `${order.customer.firstName} ${order.customer.lastName}`,
             email: order.customer.email,
             date: new Date(order.createdAt).toLocaleString('en-IN', {
+                timeZone: 'Asia/Kolkata',
                 day: '2-digit',
                 month: 'short',
                 year: 'numeric',
@@ -232,7 +233,7 @@ app.get('/api/orders/:id', async (req, res) => {
             status: order.status,
             address: order.customer, // Map customer details to address for frontend compatibility
             tracking: [
-                { status: 'Order Placed', date: new Date(order.createdAt).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }), completed: true },
+                { status: 'Order Placed', date: new Date(order.createdAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }), completed: true },
                 { status: 'Packed', date: '', completed: ['Packed', 'Shipped', 'Out for Delivery', 'Delivered'].includes(order.status) },
                 { status: 'Shipped', date: '', completed: ['Shipped', 'Out for Delivery', 'Delivered'].includes(order.status) },
                 { status: 'Out for Delivery', date: '', completed: ['Out for Delivery', 'Delivered'].includes(order.status) },

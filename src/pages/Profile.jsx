@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { User, Mail, MapPin, Phone, LogOut, Save, Package, ChevronRight, UserPlus, Lock, Sparkles, KeyRound } from 'lucide-react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { getOrders } from '../utils/orderStorage';
 
 const Profile = () => {
     const { user, login, signup, logout, updateProfile } = useAuth();
@@ -33,13 +32,22 @@ const Profile = () => {
     const [myOrders, setMyOrders] = useState([]);
 
     useEffect(() => {
-        const allOrders = getOrders() || [];
-        if (user && user.email) {
-            const userOrders = allOrders.filter(o => o.email === user.email);
-            setMyOrders(userOrders);
-        } else {
-            setMyOrders([]);
-        }
+        const fetchMyOrders = async () => {
+            if (user && user.email) {
+                try {
+                    const response = await fetch(`/api/orders?email=${user.email}`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        setMyOrders(data);
+                    }
+                } catch (error) {
+                    console.error('Error fetching orders:', error);
+                }
+            } else {
+                setMyOrders([]);
+            }
+        };
+        fetchMyOrders();
     }, [user]);
 
     useEffect(() => {

@@ -25,7 +25,7 @@ const Profile = () => {
         lastName: '',
         address: '',
         city: '',
-        pinCode: '',
+        zipCode: '',
         phone: ''
     });
     const [updateSuccess, setUpdateSuccess] = useState(false);

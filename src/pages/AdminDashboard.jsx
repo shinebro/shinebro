@@ -4,24 +4,33 @@ import { useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
     const [orders, setOrders] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchOrders = async () => {
-            try {
-                const response = await fetch('http://localhost:5000/api/orders');
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log('AdminDashboard: Fetched orders:', data);
-                    setOrders(data);
-                } else {
-                    console.error('AdminDashboard: Failed to fetch orders', response.status);
-                }
-            } catch (error) {
-                console.error('AdminDashboard: Error fetching orders:', error);
+    const fetchOrders = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            console.log('Fetching orders from http://localhost:5000/api/orders...');
+            const response = await fetch('http://localhost:5000/api/orders');
+            if (response.ok) {
+                const data = await response.json();
+                console.log('AdminDashboard: Fetched orders:', data);
+                setOrders(data);
+            } else {
+                console.error('AdminDashboard: Failed to fetch orders', response.status);
+                setError(`Failed to fetch orders (Status: ${response.status})`);
             }
-        };
+        } catch (error) {
+            console.error('AdminDashboard: Error fetching orders:', error);
+            setError(`Error connecting to server: ${error.message}`);
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchOrders();
 
         // Cleanup function: Clear session when component unmounts (user leaves page)
@@ -99,6 +108,12 @@ const AdminDashboard = () => {
                     <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
                     <div className="flex gap-4 items-center">
                         <button
+                            onClick={fetchOrders}
+                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                        >
+                            Refresh Orders
+                        </button>
+                        <button
                             onClick={handleLogout}
                             className="flex items-center gap-2 bg-red-50 text-red-600 px-4 py-2 rounded-lg hover:bg-red-100 transition-colors font-medium"
                         >
@@ -121,6 +136,13 @@ const AdminDashboard = () => {
                     </div>
                 </div>
 
+                {error && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
+                        <strong className="font-bold">Error: </strong>
+                        <span className="block sm:inline">{error}</span>
+                    </div>
+                )}
+
                 <div className="bg-white rounded-lg shadow overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
@@ -136,43 +158,56 @@ const AdminDashboard = () => {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200">
-                                {orders.map((order) => (
-                                    <tr key={order.id} className="hover:bg-gray-50 transition-colors">
-                                        <td className="p-4 text-sm font-medium text-blue-600">{order.id}</td>
-                                        <td className="p-4 text-sm text-gray-900">{order.customer}</td>
-                                        <td className="p-4 text-sm text-gray-500">{order.date}</td>
-                                        <td className="p-4 text-sm text-gray-500 max-w-xs truncate" title={order.itemsSummary}>{order.itemsSummary}</td>
-                                        <td className="p-4 text-sm font-medium text-gray-900">₹{order.total}</td>
-                                        <td className="p-4">
-                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
-                                                {order.status}
-                                            </span>
-                                        </td>
-                                        <td className="p-4">
-                                            <div className="relative group">
-                                                <select
-                                                    value={order.status}
-                                                    onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                                                    className="appearance-none bg-white border border-gray-300 text-gray-700 py-1 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 text-sm cursor-pointer hover:border-blue-400 transition-colors"
-                                                >
-                                                    {statusOptions.map(status => (
-                                                        <option key={status} value={status}>{status}</option>
-                                                    ))}
-                                                </select>
-                                                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                                    <ChevronDown size={14} />
-                                                </div>
-                                            </div>
-                                            <button
-                                                onClick={() => handleDeleteOrder(order.id)}
-                                                className="ml-3 p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"
-                                                title="Delete Order"
-                                            >
-                                                <Trash2 size={18} />
-                                            </button>
+                                {loading ? (
+                                    <tr>
+                                        <td colSpan="7" className="p-8 text-center text-gray-500">
+                                            Loading orders...
                                         </td>
                                     </tr>
-                                ))}
+                                ) : orders.length === 0 ? (
+                                    <tr>
+                                        <td colSpan="7" className="p-8 text-center text-gray-500">
+                                            No orders found. Place an order to see it here.
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    orders.map((order) => (
+                                        <tr key={order.id} className="hover:bg-gray-50 transition-colors">
+                                            <td className="p-4 text-sm font-medium text-blue-600">{order.id}</td>
+                                            <td className="p-4 text-sm text-gray-900">{order.customer}</td>
+                                            <td className="p-4 text-sm text-gray-500">{order.date}</td>
+                                            <td className="p-4 text-sm text-gray-500 max-w-xs truncate" title={order.itemsSummary}>{order.itemsSummary}</td>
+                                            <td className="p-4 text-sm font-medium text-gray-900">₹{order.total}</td>
+                                            <td className="p-4">
+                                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
+                                                    {order.status}
+                                                </span>
+                                            </td>
+                                            <td className="p-4">
+                                                <div className="relative group">
+                                                    <select
+                                                        value={order.status}
+                                                        onChange={(e) => handleStatusChange(order.id, e.target.value)}
+                                                        className="appearance-none bg-white border border-gray-300 text-gray-700 py-1 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 text-sm cursor-pointer hover:border-blue-400 transition-colors"
+                                                    >
+                                                        {statusOptions.map(status => (
+                                                            <option key={status} value={status}>{status}</option>
+                                                        ))}
+                                                    </select>
+                                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                                        <ChevronDown size={14} />
+                                                    </div>
+                                                </div>
+                                                <button
+                                                    onClick={() => handleDeleteOrder(order.id)}
+                                                    className="ml-3 p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                                                    title="Delete Order"
+                                                >
+                                                    <Trash2 size={18} />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    )))}
                             </tbody>
                         </table>
                     </div>

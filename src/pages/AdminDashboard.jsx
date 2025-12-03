@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Package, Truck, CheckCircle, Clock, AlertCircle, ChevronDown, LogOut, Trash2 } from 'lucide-react';
-import { getOrders, updateOrderStatus, deleteOrder } from '../utils/orderStorage';
 import { useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
@@ -8,7 +7,21 @@ const AdminDashboard = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        setOrders(getOrders());
+        const fetchOrders = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/orders');
+                if (response.ok) {
+                    const data = await response.json();
+                    setOrders(data);
+                } else {
+                    console.error('Failed to fetch orders');
+                }
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+            }
+        };
+
+        fetchOrders();
 
         // Cleanup function: Clear session when component unmounts (user leaves page)
         return () => {
@@ -30,15 +43,46 @@ const AdminDashboard = () => {
         }
     };
 
-    const handleStatusChange = (orderId, newStatus) => {
-        const updatedOrders = updateOrderStatus(orderId, newStatus);
-        setOrders(updatedOrders);
+    const handleStatusChange = async (orderId, newStatus) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/orders/${orderId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status: newStatus }),
+            });
+
+            if (response.ok) {
+                // Update local state to reflect change immediately
+                setOrders(orders.map(order =>
+                    order.id === orderId ? { ...order, status: newStatus } : order
+                ));
+            } else {
+                alert('Failed to update status');
+            }
+        } catch (error) {
+            console.error('Error updating status:', error);
+            alert('Error updating status');
+        }
     };
 
-    const handleDeleteOrder = (orderId) => {
+    const handleDeleteOrder = async (orderId) => {
         if (window.confirm('Are you sure you want to delete this order? This action cannot be undone.')) {
-            const updatedOrders = deleteOrder(orderId);
-            setOrders(updatedOrders);
+            try {
+                const response = await fetch(`http://localhost:5000/api/orders/${orderId}`, {
+                    method: 'DELETE',
+                });
+
+                if (response.ok) {
+                    setOrders(orders.filter(order => order.id !== orderId));
+                } else {
+                    alert('Failed to delete order');
+                }
+            } catch (error) {
+                console.error('Error deleting order:', error);
+                alert('Error deleting order');
+            }
         }
     };
 

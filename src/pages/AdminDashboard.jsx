@@ -12,12 +12,13 @@ const AdminDashboard = () => {
                 const response = await fetch('http://localhost:5000/api/orders');
                 if (response.ok) {
                     const data = await response.json();
+                    console.log('AdminDashboard: Fetched orders:', data);
                     setOrders(data);
                 } else {
-                    console.error('Failed to fetch orders');
+                    console.error('AdminDashboard: Failed to fetch orders', response.status);
                 }
             } catch (error) {
-                console.error('Error fetching orders:', error);
+                console.error('AdminDashboard: Error fetching orders:', error);
             }
         };
 

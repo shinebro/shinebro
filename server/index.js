@@ -99,6 +99,10 @@ app.post('/api/orders', validate(schemas.order), async (req, res) => {
     const orderData = req.body;
     console.log("Received order:", orderData);
 
+    if (orderData.customer.phone && orderData.customer.phone.length !== 10) {
+        return res.status(400).json({ success: false, message: 'Phone number must be exactly 10 digits' });
+    }
+
     try {
         // Generate unique order ID using timestamp + random string to avoid race conditions
         const date = new Date();

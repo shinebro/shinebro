@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ChevronRight, Star, Download, HelpCircle, X, Send, Printer } from 'lucide-react';
-import { getOrderById } from '../utils/orderStorage';
 
 const OrderDetails = () => {
     const { orderId } = useParams();
@@ -13,22 +12,21 @@ const OrderDetails = () => {
     const [selectedItemForReview, setSelectedItemForReview] = useState(null);
 
     useEffect(() => {
-        const fetchedOrder = getOrderById(orderId);
-        if (fetchedOrder) {
-            // Calculate tracking steps based on status
-            const allStatuses = ['Placed', 'Packed', 'Shipped', 'Out for Delivery', 'Delivered'];
-            const currentStatusIndex = allStatuses.indexOf(fetchedOrder.status);
-
-            const trackingSteps = [
-                { status: 'Order Placed', date: fetchedOrder.date, completed: currentStatusIndex >= 0 },
-                { status: 'Packed', date: '', completed: currentStatusIndex >= 1 },
-                { status: 'Shipped', date: '', completed: currentStatusIndex >= 2 },
-                { status: 'Out for Delivery', date: '', completed: currentStatusIndex >= 3 },
-                { status: 'Delivered', date: '', completed: currentStatusIndex >= 4 }
-            ];
-
-            setOrder({ ...fetchedOrder, tracking: trackingSteps });
-        }
+        const fetchOrder = async () => {
+            try {
+                const response = await fetch(`/api/orders/${orderId}`);
+                if (response.ok) {
+                    const fetchedOrder = await response.json();
+                    setOrder(fetchedOrder);
+                } else {
+                    setOrder(null);
+                }
+            } catch (error) {
+                console.error('Error fetching order:', error);
+                setOrder(null);
+            }
+        };
+        fetchOrder();
     }, [orderId]);
 
     const handleDownloadInvoice = () => {

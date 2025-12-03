@@ -19,6 +19,9 @@ const OrderSuccess = () => {
                 <div className="bg-green-50 p-4 rounded-lg mb-6">
                     <p className="text-sm text-gray-500 uppercase tracking-wide font-semibold">Order ID</p>
                     <p className="text-2xl font-mono font-bold text-primary">{orderId}</p>
+                    {location.state?.orderDate && (
+                        <p className="text-sm text-gray-500 mt-2 font-medium">Placed on: {location.state.orderDate}</p>
+                    )}
                 </div>
 
                 <div className="bg-white border border-gray-200 rounded-lg p-4 mb-6 text-left">

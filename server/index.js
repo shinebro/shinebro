@@ -172,7 +172,12 @@ Order Date: ${new Date().toLocaleString()}`
 // Get all orders (Admin)
 app.get('/api/orders', async (req, res) => {
     try {
-        const orders = await Order.find().sort({ createdAt: -1 });
+        const { email } = req.query;
+        let query = {};
+        if (email) {
+            query = { 'customer.email': email };
+        }
+        const orders = await Order.find(query).sort({ createdAt: -1 });
 
         // Transform data to match frontend expectations if necessary
         // The frontend expects: id, customer (name), date, itemsSummary, total, status
@@ -198,6 +203,47 @@ app.get('/api/orders', async (req, res) => {
     } catch (error) {
         console.error('Error fetching orders:', error);
         res.status(500).json({ message: 'Failed to fetch orders' });
+    }
+});
+
+// Get single order
+app.get('/api/orders/:id', async (req, res) => {
+    try {
+        const order = await Order.findOne({ orderId: req.params.id });
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        // Format order for frontend
+        const formattedOrder = {
+            id: order.orderId,
+            customer: `${order.customer.firstName} ${order.customer.lastName}`,
+            email: order.customer.email,
+            date: new Date(order.createdAt).toLocaleString('en-IN', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            }),
+            items: order.items,
+            total: order.total,
+            status: order.status,
+            address: order.customer, // Map customer details to address for frontend compatibility
+            tracking: [
+                { status: 'Order Placed', date: new Date(order.createdAt).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }), completed: true },
+                { status: 'Packed', date: '', completed: ['Packed', 'Shipped', 'Out for Delivery', 'Delivered'].includes(order.status) },
+                { status: 'Shipped', date: '', completed: ['Shipped', 'Out for Delivery', 'Delivered'].includes(order.status) },
+                { status: 'Out for Delivery', date: '', completed: ['Out for Delivery', 'Delivered'].includes(order.status) },
+                { status: 'Delivered', date: '', completed: order.status === 'Delivered' }
+            ]
+        };
+
+        res.json(formattedOrder);
+    } catch (error) {
+        console.error('Error fetching order:', error);
+        res.status(500).json({ message: 'Server error' });
     }
 });
 

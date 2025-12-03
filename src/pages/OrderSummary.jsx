@@ -96,7 +96,19 @@ const OrderSummary = () => {
                 }
                 clearCart();
                 console.log('🚀 Navigating to /order-success');
-                navigate('/order-success', { state: { orderId: data.orderId } });
+                navigate('/order-success', {
+                    state: {
+                        orderId: data.orderId,
+                        orderDate: new Date().toLocaleString('en-IN', {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true
+                        })
+                    }
+                });
             } else {
                 console.error('❌ Order failed:', data);
                 alert(`Order failed: ${data.message || 'Please try again.'}`);

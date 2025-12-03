@@ -179,7 +179,14 @@ app.get('/api/orders', async (req, res) => {
         const formattedOrders = orders.map(order => ({
             id: order.orderId,
             customer: `${order.customer.firstName} ${order.customer.lastName}`,
-            date: new Date(order.createdAt).toLocaleDateString(),
+            date: new Date(order.createdAt).toLocaleString('en-IN', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            }),
             itemsSummary: order.items.map(i => `${i.name} (${i.quantity})`).join(', '),
             total: order.total,
             status: order.status,

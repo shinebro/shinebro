@@ -50,7 +50,7 @@ const OrderSummary = () => {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
-            const response = await fetch('http://localhost:5000/api/orders', {
+            const response = await fetch('/api/orders', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -84,7 +84,7 @@ const OrderSummary = () => {
                         street: formData.address,
                         city: formData.city,
                         state: formData.state || '',
-                        pincode: formData.zipCode
+                        pincode: formData.pinCode
                     }
                 };
                 addOrder(adminOrder);
@@ -123,7 +123,7 @@ const OrderSummary = () => {
                     street: formData.address,
                     city: formData.city,
                     state: formData.state || '',
-                    pincode: formData.zipCode
+                    pincode: formData.pinCode
                 }
             };
             addOrder(adminOrder);
@@ -146,7 +146,7 @@ const OrderSummary = () => {
                     <div className="text-gray-700">
                         <p className="font-medium">{formData.firstName} {formData.lastName}</p>
                         <p>{formData.address}</p>
-                        <p>{formData.city}, {formData.zipCode}</p>
+                        <p>{formData.city}, {formData.pinCode}</p>
                         <p>{formData.phone}</p>
                         <p>{formData.email}</p>
                     </div>

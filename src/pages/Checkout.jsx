@@ -16,7 +16,6 @@ const Checkout = () => {
         address: '',
         city: '',
         zipCode: '',
-        state: '',
         phone: ''
     });
     const [processingPayment, setProcessingPayment] = useState(false);
@@ -177,15 +176,6 @@ const Checkout = () => {
                                         className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
                                         onChange={handleInputChange}
                                     />
-                                    <input
-                                        type="text"
-                                        name="state"
-                                        placeholder="State"
-                                        value={formData.state}
-                                        required
-                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
-                                        onChange={handleInputChange}
-                                    />
                                     <div className="relative">
                                         <input
                                             type="text"
@@ -230,3 +220,4 @@ const Checkout = () => {
 };
 
 export default Checkout;
+

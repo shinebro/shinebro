@@ -73,7 +73,14 @@ const OrderSummary = () => {
                     id: data.orderId,
                     email: formData.email,
                     customer: `${formData.firstName} ${formData.lastName}`,
-                    date: new Date().toLocaleDateString(),
+                    date: new Date().toLocaleString('en-IN', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true
+                    }),
                     itemsSummary: `${cart.length} items`, // Simplified for list view
                     total: cartTotal,
                     status: 'Placed',
@@ -125,7 +132,14 @@ const OrderSummary = () => {
                 id: offlineOrderId,
                 email: formData.email,
                 customer: `${formData.firstName} ${formData.lastName}`,
-                date: new Date().toLocaleDateString(),
+                date: new Date().toLocaleString('en-IN', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                }),
                 itemsSummary: `${cart.length} items`,
                 total: cartTotal,
                 status: 'Placed',

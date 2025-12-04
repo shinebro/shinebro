@@ -84,7 +84,7 @@ const OrderSummary = () => {
                         street: formData.address,
                         city: formData.city,
                         state: formData.state || '',
-                        pincode: formData.pinCode
+                        pincode: formData.zipCode
                     }
                 };
                 addOrder(adminOrder);
@@ -136,7 +136,7 @@ const OrderSummary = () => {
                     street: formData.address,
                     city: formData.city,
                     state: formData.state || '',
-                    pincode: formData.pinCode
+                    pincode: formData.zipCode
                 }
             };
             addOrder(adminOrder);
@@ -159,7 +159,7 @@ const OrderSummary = () => {
                     <div className="text-gray-700">
                         <p className="font-medium">{formData.firstName} {formData.lastName}</p>
                         <p>{formData.address}</p>
-                        <p>{formData.city}, {formData.pinCode}</p>
+                        <p>{formData.city}, {formData.zipCode}</p>
                         <p>{formData.phone}</p>
                         <p>{formData.email}</p>
                     </div>

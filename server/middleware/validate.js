@@ -36,7 +36,7 @@ const schemas = {
             phone: Joi.string().required(),
             address: Joi.string().required(),
             city: Joi.string().required(),
-            zipCode: Joi.string().required()
+            pincode: Joi.string().required()
         }).required(),
         items: Joi.array().items(Joi.object({
             id: Joi.number().required(),

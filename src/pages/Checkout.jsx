@@ -15,7 +15,7 @@ const Checkout = () => {
         email: '',
         address: '',
         city: '',
-        zipCode: '',
+        pincode: '',
         phone: ''
     });
     const [processingPayment, setProcessingPayment] = useState(false);
@@ -35,8 +35,8 @@ const Checkout = () => {
                 firstName: user.name ? user.name.split(' ')[0] : '',
                 lastName: user.name ? user.name.split(' ').slice(1).join(' ') : ''
             }));
-            if (user.shippingInfo.zipCode) {
-                setPincodeInput(user.shippingInfo.zipCode);
+            if (user.shippingInfo.pincode) {
+                setPincodeInput(user.shippingInfo.pincode);
             }
         }
     }, [user]);
@@ -55,7 +55,7 @@ const Checkout = () => {
         if (allowedPincodes.includes(pincodeInput)) {
             setIsPincodeVerified(true);
             setPincodeError('');
-            setFormData(prev => ({ ...prev, zipCode: pincodeInput }));
+            setFormData(prev => ({ ...prev, pincode: pincodeInput }));
         } else {
             setIsPincodeVerified(false);
             setPincodeError('Delivery is not available for this pincode. Allowed pincodes: ' + allowedPincodes.join(', '));
@@ -64,7 +64,7 @@ const Checkout = () => {
 
     const handleProceedToSummary = (e) => {
         e.preventDefault();
-        if (!allowedPincodes.includes(formData.zipCode)) {
+        if (!allowedPincodes.includes(formData.pincode)) {
             setPincodeError('Invalid Pincode');
             setIsPincodeVerified(false);
             return;
@@ -179,9 +179,9 @@ const Checkout = () => {
                                     <div className="relative">
                                         <input
                                             type="text"
-                                            name="zipCode"
-                                            placeholder="ZIP Code"
-                                            value={formData.zipCode}
+                                            name="pincode"
+                                            placeholder="Pincode"
+                                            value={formData.pincode}
                                             readOnly
                                             className="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed outline-none"
                                         />
@@ -220,4 +220,3 @@ const Checkout = () => {
 };
 
 export default Checkout;
-

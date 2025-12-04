@@ -189,6 +189,7 @@ app.get('/api/orders', async (req, res) => {
             id: order.orderId,
             customer: `${order.customer.firstName} ${order.customer.lastName}`,
             date: new Date(order.createdAt).toLocaleString('en-IN', {
+                timeZone: 'Asia/Kolkata',
                 day: '2-digit',
                 month: 'short',
                 year: 'numeric',

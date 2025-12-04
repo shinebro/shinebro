@@ -25,7 +25,7 @@ const Profile = () => {
         lastName: '',
         address: '',
         city: '',
-        zipCode: '',
+        pincode: '',
         phone: ''
     });
     const [updateSuccess, setUpdateSuccess] = useState(false);
@@ -348,11 +348,11 @@ const Profile = () => {
                                 />
                             </div>
                             <div className="space-y-1">
-                                <label className="text-sm font-medium text-gray-700">ZIP Code</label>
+                                <label className="text-sm font-medium text-gray-700">Pincode</label>
                                 <input
                                     type="text"
-                                    name="zipCode"
-                                    value={profileData.zipCode}
+                                    name="pincode"
+                                    value={profileData.pincode}
                                     onChange={handleInputChange}
                                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
                                 />

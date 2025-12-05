@@ -18,6 +18,17 @@ const Profile = () => {
     const [verificationCode, setVerificationCode] = useState('');
     const [step, setStep] = useState('details'); // 'details', 'verification', 'forgot-request', 'forgot-verify'
     const [loading, setLoading] = useState(false);
+    const [resendTimer, setResendTimer] = useState(0);
+
+    useEffect(() => {
+        let interval;
+        if (resendTimer > 0) {
+            interval = setInterval(() => {
+                setResendTimer((prev) => prev - 1);
+            }, 1000);
+        }
+        return () => clearInterval(interval);
+    }, [resendTimer]);
 
     // Profile Form State
     const [profileData, setProfileData] = useState({
@@ -141,6 +152,21 @@ const Profile = () => {
         setLoading(false);
         if (result.success) {
             setStep('forgot-verify');
+            setResendTimer(60); // Start 60s cooldown
+        } else {
+            setAuthError(result.message);
+        }
+    };
+
+    const handleResendCode = async () => {
+        if (resendTimer > 0) return;
+        setAuthError('');
+        setLoading(true);
+        const result = await forgotPassword(authEmail);
+        setLoading(false);
+        if (result.success) {
+            setResendTimer(60);
+            alert("Code resent successfully!");
         } else {
             setAuthError(result.message);
         }
@@ -280,6 +306,17 @@ const Profile = () => {
                                                 onChange={(e) => setVerificationCode(e.target.value)}
                                                 maxLength={6}
                                             />
+                                        </div>
+                                        <div className="flex justify-between items-center text-sm mt-2">
+                                            <span className="text-gray-500">Code expires in 10 minutes</span>
+                                            <button
+                                                type="button"
+                                                onClick={handleResendCode}
+                                                disabled={resendTimer > 0 || loading}
+                                                className={`font-medium ${resendTimer > 0 ? 'text-gray-400 cursor-not-allowed' : 'text-primary hover:text-green-700'}`}
+                                            >
+                                                {resendTimer > 0 ? `Resend in ${resendTimer}s` : 'Resend Code'}
+                                            </button>
                                         </div>
                                     </div>
                                     <input

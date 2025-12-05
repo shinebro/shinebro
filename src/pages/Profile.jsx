@@ -140,6 +140,9 @@ const Profile = () => {
         const result = await forgotPassword(authEmail);
         setLoading(false);
         if (result.success) {
+            if (result.debugCode) {
+                alert(`DEBUG: Your reset code is ${result.debugCode}`);
+            }
             setStep('forgot-verify');
         } else {
             setAuthError(result.message);

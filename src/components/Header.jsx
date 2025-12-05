@@ -66,10 +66,21 @@ const Header = () => {
                             <span>|</span>
                             <span className="flex items-center gap-1">🚚 Delivers in 24 Hours</span>
                             <span>|</span>
-
+                        </div>
+                        {/* Quadruplicate set for seamless scrolling on very wide screens */}
+                        <div className="flex items-center gap-8 mx-4">
+                            <span className="flex items-center gap-1">🐾 Safe for pets</span>
+                            <span>|</span>
+                            <span className="flex items-center gap-1">♻️ Biodegradable</span>
+                            <span>|</span>
+                            <span className="flex items-center gap-1">💵 COD Available</span>
+                            <span>|</span>
+                            <span className="flex items-center gap-1">🚚 Delivers in 24 Hours</span>
+                            <span>|</span>
                         </div>
                     </div>
                 </div>
+            </div>
 
             <header className="bg-white shadow-sm sticky top-0 z-50">
                 <div className="container mx-auto px-4 py-0">
@@ -191,5 +202,3 @@ const Header = () => {
 };
 
 export default Header;
-
-

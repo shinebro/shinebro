@@ -4,7 +4,7 @@ import { User, Mail, MapPin, Phone, LogOut, Save, Package, ChevronRight, UserPlu
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 
 const Profile = () => {
-    const { user, login, signup, logout, updateProfile } = useAuth();
+    const { user, login, signup, logout, updateProfile, forgotPassword, resetPassword } = useAuth();
     console.log("Profile render, user:", user);
     const navigate = useNavigate();
     const location = useLocation();
@@ -16,7 +16,7 @@ const Profile = () => {
     const [authName, setAuthName] = useState('');
     const [authError, setAuthError] = useState('');
     const [verificationCode, setVerificationCode] = useState('');
-    const [step, setStep] = useState('details'); // 'details' or 'verification'
+    const [step, setStep] = useState('details'); // 'details', 'verification', 'forgot-request', 'forgot-verify'
     const [loading, setLoading] = useState(false);
 
     // Profile Form State
@@ -133,6 +133,36 @@ const Profile = () => {
         }
     };
 
+    const handleForgotPasswordRequest = async (e) => {
+        e.preventDefault();
+        setAuthError('');
+        setLoading(true);
+        const result = await forgotPassword(authEmail);
+        setLoading(false);
+        if (result.success) {
+            setStep('forgot-verify');
+        } else {
+            setAuthError(result.message);
+        }
+    };
+
+    const handleResetPassword = async (e) => {
+        e.preventDefault();
+        setAuthError('');
+        setLoading(true);
+        const result = await resetPassword(authEmail, verificationCode, authPassword);
+        setLoading(false);
+        if (result.success) {
+            setAuthError(''); // Clear errors
+            alert('Password reset successfully! Please login with your new password.');
+            setActiveTab('login');
+            setStep('details');
+            setAuthPassword(''); // Clear password field
+        } else {
+            setAuthError(result.message);
+        }
+    };
+
     const handleUpdateProfile = async (e) => {
         e.preventDefault();
         await updateProfile(profileData);
@@ -156,16 +186,28 @@ const Profile = () => {
                 <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl shadow-sm">
                     <div className="text-center">
                         <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-                            {activeTab === 'login' ? 'Sign in to your account' : 'Create your account'}
+                            {activeTab === 'login' ? 'Sign in to your account' :
+                                activeTab === 'signup' ? 'Create your account' :
+                                    'Reset Password'}
                         </h2>
                         <p className="mt-2 text-sm text-gray-600">
                             Or{' '}
-                            <button
-                                onClick={() => setActiveTab(activeTab === 'login' ? 'signup' : 'login')}
-                                className="font-medium text-primary hover:text-green-700"
-                            >
-                                {activeTab === 'login' ? 'create a new account' : 'sign in to existing account'}
-                            </button>
+                            {activeTab !== 'forgot-password' && (
+                                <button
+                                    onClick={() => setActiveTab(activeTab === 'login' ? 'signup' : 'login')}
+                                    className="font-medium text-primary hover:text-green-700"
+                                >
+                                    {activeTab === 'login' ? 'create a new account' : 'sign in to existing account'}
+                                </button>
+                            )}
+                            {activeTab === 'forgot-password' && (
+                                <button
+                                    onClick={() => { setActiveTab('login'); setStep('details'); }}
+                                    className="font-medium text-primary hover:text-green-700"
+                                >
+                                    back to sign in
+                                </button>
+                            )}
                         </p>
                     </div>
 
@@ -191,11 +233,73 @@ const Profile = () => {
                                     onChange={(e) => setAuthPassword(e.target.value)}
                                 />
                             </div>
+                            <div className="flex items-center justify-end">
+                                <button
+                                    type="button"
+                                    onClick={() => { setActiveTab('forgot-password'); setStep('forgot-request'); }}
+                                    className="text-sm font-medium text-primary hover:text-green-700"
+                                >
+                                    Forgot your password?
+                                </button>
+                            </div>
                             <button
                                 type="submit"
                                 className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                             >
                                 Sign in
+                            </button>
+                        </form>
+                    ) : activeTab === 'forgot-password' ? (
+                        <form className="mt-8 space-y-6" onSubmit={step === 'forgot-request' ? handleForgotPasswordRequest : handleResetPassword}>
+                            {step === 'forgot-request' ? (
+                                <div>
+                                    <input
+                                        type="email"
+                                        required
+                                        className="appearance-none rounded-md relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
+                                        placeholder="Enter your email address"
+                                        value={authEmail}
+                                        onChange={(e) => setAuthEmail(e.target.value)}
+                                    />
+                                </div>
+                            ) : (
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Reset Code sent to {authEmail}
+                                        </label>
+                                        <div className="relative">
+                                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                <KeyRound className="h-5 w-5 text-gray-400" />
+                                            </div>
+                                            <input
+                                                required
+                                                className="appearance-none block w-full pl-10 px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm tracking-widest"
+                                                placeholder="Enter 6-digit code"
+                                                value={verificationCode}
+                                                onChange={(e) => setVerificationCode(e.target.value)}
+                                                maxLength={6}
+                                            />
+                                        </div>
+                                    </div>
+                                    <input
+                                        type="password"
+                                        required
+                                        className="appearance-none rounded-md relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
+                                        placeholder="New Password"
+                                        value={authPassword}
+                                        onChange={(e) => setAuthPassword(e.target.value)}
+                                    />
+                                </div>
+                            )}
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-70"
+                            >
+                                {loading ? 'Processing...' : (
+                                    step === 'forgot-request' ? 'Send Reset Code' : 'Reset Password'
+                                )}
                             </button>
                         </form>
                     ) : (

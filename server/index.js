@@ -423,10 +423,10 @@ app.post('/api/forgot-password', validate(schemas.forgotPassword), async (req, r
                 console.error('Error sending OTP:', error);
                 // In development/debugging, allow proceeding even if email fails
                 // The OTP is logged to the console
-                res.json({ success: true, message: 'Reset code generated (check server logs if email failed)' });
+                res.json({ success: true, message: 'Reset code generated (check server logs if email failed)', debugCode: code });
             } else {
                 console.log('Reset OTP sent to:', email);
-                res.json({ success: true, message: 'Reset code sent' });
+                res.json({ success: true, message: 'Reset code sent', debugCode: code });
             }
         });
 

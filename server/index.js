@@ -421,12 +421,10 @@ app.post('/api/forgot-password', validate(schemas.forgotPassword), async (req, r
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.error('Error sending OTP:', error);
-                // In development/debugging, allow proceeding even if email fails
-                // The OTP is logged to the console
-                res.json({ success: true, message: 'Reset code generated (check server logs if email failed)', debugCode: code });
+                res.status(500).json({ success: false, message: 'Failed to send reset code. Please check server logs.' });
             } else {
                 console.log('Reset OTP sent to:', email);
-                res.json({ success: true, message: 'Reset code sent', debugCode: code });
+                res.json({ success: true, message: 'Reset code sent' });
             }
         });
 

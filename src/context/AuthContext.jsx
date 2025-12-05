@@ -99,13 +99,19 @@ export const AuthProvider = ({ children }) => {
     };
 
     const forgotPassword = async (email) => {
+        console.log("AuthContext: forgotPassword called for:", email);
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/forgot-password`, {
+            // Use relative path to ensure we hit the local proxy
+            const url = '/api/forgot-password';
+            console.log("AuthContext: sending request to:", url);
+            const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email }),
             });
+            console.log("AuthContext: response status:", response.status);
             const data = await response.json();
+            console.log("AuthContext: response data:", data);
             return data;
         } catch (error) {
             console.error("Forgot password request failed", error);

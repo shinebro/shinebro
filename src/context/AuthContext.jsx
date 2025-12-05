@@ -98,8 +98,38 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const forgotPassword = async (email) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/forgot-password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email }),
+            });
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error("Forgot password request failed", error);
+            return { success: false, message: "Network error" };
+        }
+    };
+
+    const resetPassword = async (email, code, newPassword) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/reset-password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, code, newPassword }),
+            });
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error("Reset password failed", error);
+            return { success: false, message: "Network error" };
+        }
+    };
+
     return (
-        <AuthContext.Provider value={{ user, login, signup, logout, updateProfile, loading, isAuthOpen, openAuth, closeAuth }}>
+        <AuthContext.Provider value={{ user, login, signup, logout, updateProfile, forgotPassword, resetPassword, loading, isAuthOpen, openAuth, closeAuth }}>
             {!loading && children}
         </AuthContext.Provider>
     );

@@ -42,7 +42,7 @@ const Header = () => {
                             <span>|</span>
                             <span className="flex items-center gap-1">💵 COD Available</span>
                             <span>|</span>
-                            <span className="flex items-center gap-1">🚚 Delivers in 4-8 days</span>
+                            <span className="flex items-center gap-1">🚚 Delivers in 24 Hours</span>
                             <span>|</span>
                         </div>
                         {/* Duplicate set for seamless scrolling */}
@@ -202,3 +202,4 @@ const Header = () => {
 };
 
 export default Header;
+

@@ -37,8 +37,6 @@ app.use('/api/', limiter);
 // CORS Configuration
 app.use(cors({
     origin: [
-        'http://localhost:5173',
-        'http://localhost:5174',
         'https://shinebro.com',
         'https://www.shinebro.com',
         /\.vercel\.app$/ // Allow all Vercel deployments
@@ -635,3 +633,4 @@ if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
 
 module.exports = app;
 // Force restart for updates
+

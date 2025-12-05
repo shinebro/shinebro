@@ -392,6 +392,7 @@ app.post('/api/send-verification-code', async (req, res) => {
 
 // Forgot Password - Request OTP
 app.post('/api/forgot-password', validate(schemas.forgotPassword), async (req, res) => {
+    console.log("DEBUG: Forgot Password endpoint hit for:", req.body.email);
     const { email } = req.body;
 
     try {
@@ -625,7 +626,7 @@ if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
         try {
             await connectDB();
             app.listen(PORT, () => {
-                console.log(`Server running on http://shinebro.com`);
+                console.log(`Server running on http://localhost:${PORT}`);
             });
         } catch (error) {
             console.error("Failed to start server:", error);

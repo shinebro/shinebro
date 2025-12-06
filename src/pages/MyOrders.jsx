@@ -1,13 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
-import { Package, ChevronRight, ChevronLeft, Search, Filter } from 'lucide-react';
+import { Package, ChevronRight, ChevronLeft, Search, Filter, Trash2 } from 'lucide-react';
 
 const MyOrders = () => {
     const { user } = useAuth();
     const [myOrders, setMyOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+
+    const handleDeleteOrder = async (e, orderId) => {
+        e.preventDefault(); // Prevent navigation to details
+        if (!window.confirm('Are you sure you want to delete this order from your history?')) return;
+
+        try {
+            const response = await fetch(`/api/orders/${orderId}`, {
+                method: 'DELETE',
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                setMyOrders(prev => prev.filter(order => order.id !== orderId));
+            } else {
+                alert(data.message || 'Failed to delete order');
+            }
+        } catch (error) {
+            console.error('Error deleting order:', error);
+            alert('Failed to connect to server');
+        }
+    };
 
     useEffect(() => {
         const fetchMyOrders = async () => {
@@ -92,8 +113,8 @@ const MyOrders = () => {
                                             <div className="mt-4 flex flex-wrap items-center gap-2 justify-between">
                                                 <div className="flex items-center gap-2">
                                                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${order.status === 'Delivered' ? 'bg-green-100 text-green-800' :
-                                                            order.status === 'Cancelled' ? 'bg-red-100 text-red-800' :
-                                                                'bg-blue-100 text-blue-800'
+                                                        order.status === 'Cancelled' ? 'bg-red-100 text-red-800' :
+                                                            'bg-blue-100 text-blue-800'
                                                         }`}>
                                                         {order.status}
                                                     </span>
@@ -101,7 +122,19 @@ const MyOrders = () => {
                                                         <span className="text-xs text-gray-500">Delivered on {order.deliveryDate || 'Unknown'}</span>
                                                     )}
                                                 </div>
-                                                <div className="md:hidden font-bold text-gray-900">₹{order.total}</div>
+                                                <div className="flex items-center gap-4">
+                                                    <div className="md:hidden font-bold text-gray-900">₹{order.total}</div>
+
+                                                    {['Delivered', 'Cancelled'].includes(order.status) && (
+                                                        <button
+                                                            onClick={(e) => handleDeleteOrder(e, order.id)}
+                                                            className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors z-10"
+                                                            title="Delete Order"
+                                                        >
+                                                            <Trash2 size={18} />
+                                                        </button>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                         <ChevronRight className="text-gray-400 group-hover:text-primary transition-colors ml-2" />

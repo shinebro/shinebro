@@ -42,7 +42,7 @@ const Header = () => {
                             <span>|</span>
                             <span className="flex items-center gap-1">💵 COD Available</span>
                             <span>|</span>
-                            <span className="flex items-center gap-1">🚚 Delivers in 24 Hours</span>
+                            <span className="flex items-center gap-1">🚚 Delivers in 4-8 days</span>
                             <span>|</span>
                         </div>
                         {/* Duplicate set for seamless scrolling */}
@@ -53,7 +53,7 @@ const Header = () => {
                             <span>|</span>
                             <span className="flex items-center gap-1">💵 COD Available</span>
                             <span>|</span>
-                            <span className="flex items-center gap-1">🚚 Delivers in 24 Hours</span>
+                            <span className="flex items-center gap-1">🚚 Delivers in 4-8 days</span>
                             <span>|</span>
                         </div>
                         {/* Triplicate set for seamless scrolling on wide screens */}
@@ -64,7 +64,7 @@ const Header = () => {
                             <span>|</span>
                             <span className="flex items-center gap-1">💵 COD Available</span>
                             <span>|</span>
-                            <span className="flex items-center gap-1">🚚 Delivers in 24 Hours</span>
+                            <span className="flex items-center gap-1">🚚 Delivers in 4-8 days</span>
                             <span>|</span>
                         </div>
                         {/* Quadruplicate set for seamless scrolling on very wide screens */}
@@ -75,7 +75,7 @@ const Header = () => {
                             <span>|</span>
                             <span className="flex items-center gap-1">💵 COD Available</span>
                             <span>|</span>
-                            <span className="flex items-center gap-1">🚚 Delivers in 24 Hours</span>
+                            <span className="flex items-center gap-1">🚚 Delivers in 4-8 days</span>
                             <span>|</span>
                         </div>
                     </div>
@@ -190,7 +190,10 @@ const Header = () => {
                                     </Link>
                                 )}
                                 {user && (
-                                    <button onClick={handleLogout} className="text-left text-red-600 hover:text-red-700 font-medium">Sign Out</button>
+                                    <>
+                                        <Link to="/orders" className="text-gray-600 hover:text-primary font-medium" onClick={() => setIsMenuOpen(false)}>My Orders</Link>
+                                        <button onClick={handleLogout} className="text-left text-red-600 hover:text-red-700 font-medium">Sign Out</button>
+                                    </>
                                 )}
                             </nav>
                         </div>

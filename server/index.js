@@ -237,13 +237,16 @@ app.get('/api/orders/:id', async (req, res) => {
             total: order.total,
             status: order.status,
             address: order.customer, // Map customer details to address for frontend compatibility
-            tracking: [
+            tracking: order.status === 'Cancelled' ? [
+                { status: 'Order Placed', date: new Date(order.createdAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }), completed: true },
+                { status: 'Cancelled', date: new Date(order.updatedAt || Date.now()).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }), completed: true }
+            ] : [
                 { status: 'Order Placed', date: new Date(order.createdAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }), completed: true },
                 { status: 'Packed', date: '', completed: ['Packed', 'Shipped', 'Out for Delivery', 'Delivered'].includes(order.status) },
                 { status: 'Shipped', date: '', completed: ['Shipped', 'Out for Delivery', 'Delivered'].includes(order.status) },
                 { status: 'Out for Delivery', date: '', completed: ['Out for Delivery', 'Delivered'].includes(order.status) },
                 { status: 'Delivered', date: '', completed: order.status === 'Delivered' }
-            ]
+            ]   
         };
 
         res.json(formattedOrder);
@@ -710,3 +713,4 @@ if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
 
 module.exports = app;
 // Force restart for updates
+

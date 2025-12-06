@@ -26,6 +26,7 @@ import Contact from './pages/Contact';
 import ReturnPolicy from './pages/ReturnPolicy';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import MyOrders from './pages/MyOrders';
 import { AuthProvider } from './context/AuthContext';
 
 function App() {
@@ -63,6 +64,7 @@ function App() {
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/signup" element={<Navigate to="/profile" replace />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/orders" element={<MyOrders />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/return-policy" element={<ReturnPolicy />} />
             </Routes>

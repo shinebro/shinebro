@@ -173,12 +173,14 @@ const OrderDetails = () => {
                                             {order.tracking?.map((step, i) => (
                                                 <div key={i} className="relative flex items-start gap-4 mb-6 last:mb-0">
                                                     <div className={`z-10 w-5 h-5 rounded-full flex items-center justify-center ${step.status === 'Cancelled' ? 'bg-red-500' :
-                                                            step.completed ? 'bg-green-500' : 'bg-gray-200'
+                                                        step.completed ? 'bg-green-500' : 'bg-gray-200'
                                                         }`}>
                                                         {step.completed && <div className="w-2 h-2 bg-white rounded-full"></div>}
                                                     </div>
                                                     <div className="-mt-1">
-                                                        <p className={`text-sm font-medium ${step.completed ? 'text-gray-900' : 'text-gray-400'}`}>{step.status}</p>
+                                                        <p className={`text-sm font-medium ${step.status === 'Cancelled' ? 'text-red-600' :
+                                                                step.completed ? 'text-gray-900' : 'text-gray-400'
+                                                            }`}>{step.status}</p>
                                                         <p className="text-xs text-gray-500">{step.date}</p>
                                                         {step.status === 'Delivered' && step.completed && (
                                                             <p className="text-xs text-gray-500 mt-1">Your item has been delivered</p>

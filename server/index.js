@@ -246,7 +246,7 @@ app.get('/api/orders/:id', async (req, res) => {
                 { status: 'Shipped', date: '', completed: ['Shipped', 'Out for Delivery', 'Delivered'].includes(order.status) },
                 { status: 'Out for Delivery', date: '', completed: ['Out for Delivery', 'Delivered'].includes(order.status) },
                 { status: 'Delivered', date: '', completed: order.status === 'Delivered' }
-            ]   
+            ]
         };
 
         res.json(formattedOrder);
@@ -713,4 +713,3 @@ if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
 
 module.exports = app;
 // Force restart for updates
-

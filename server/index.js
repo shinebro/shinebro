@@ -37,6 +37,8 @@ app.use('/api/', limiter);
 // CORS Configuration
 app.use(cors({
     origin: [
+        'http://localhost:5173',
+        'http://localhost:5174',
         'https://shinebro.com',
         'https://www.shinebro.com',
         /\.vercel\.app$/ // Allow all Vercel deployments
@@ -271,6 +273,59 @@ app.put('/api/orders/:id', async (req, res) => {
     } catch (error) {
         console.error('Error updating order:', error);
         res.status(500).json({ message: 'Failed to update order' });
+    }
+});
+
+// Cancel Order (User/Admin)
+app.post('/api/cancel-order/:id', async (req, res) => {
+    const { id } = req.params;
+    const { reason } = req.body;
+
+    try {
+        const order = await Order.findOne({ orderId: id });
+
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        // Check if order can be cancelled
+        if (!['Processing', 'Order Placed', 'Pending'].includes(order.status)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Order cannot be cancelled at this stage. Please contact support.'
+            });
+        }
+
+        order.status = 'Cancelled';
+        await order.save();
+
+        // Send email notification to Admin
+        const mailOptions = {
+            from: process.env.GMAIL_USER,
+            to: process.env.GMAIL_USER, // Admin email
+            subject: `🚫 Order Cancelled: ${id}`,
+            text: `An order has been cancelled by the customer.
+
+Order ID: ${id}
+Customer: ${order.customer.firstName} ${order.customer.lastName}
+Reason: ${reason || 'No reason provided'}
+
+Please update your records.`
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error sending cancellation email to admin:', error);
+            } else {
+                console.log('Cancellation email sent to admin: ' + info.response);
+            }
+        });
+
+        res.json({ success: true, message: 'Order cancelled successfully', order });
+
+    } catch (error) {
+        console.error('Error cancelling order:', error);
+        res.status(500).json({ message: 'Failed to cancel order' });
     }
 });
 
@@ -622,7 +677,7 @@ if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
         try {
             await connectDB();
             app.listen(PORT, () => {
-                console.log(`Server running on http://shinebro.com`);
+                console.log(`Server running on http://localhost:${PORT}`);
             });
         } catch (error) {
             console.error("Failed to start server:", error);
@@ -633,5 +688,3 @@ if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
 
 module.exports = app;
 // Force restart for updates
-
-

@@ -61,6 +61,19 @@ const OrderDetails = () => {
                 body: JSON.stringify({ reason: 'User requested cancellation from dashboard' }),
             });
 
+            if (!response.ok) {
+                if (response.status === 404) {
+                    throw new Error('Cancel endpoint not found (Server might need restart)');
+                }
+                const text = await response.text();
+                try {
+                    const data = JSON.parse(text);
+                    throw new Error(data.message || 'Server error');
+                } catch (e) {
+                    throw new Error(`Server error: ${response.status} ${response.statusText}`);
+                }
+            }
+
             const data = await response.json();
 
             if (data.success) {

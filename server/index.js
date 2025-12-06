@@ -300,7 +300,7 @@ app.post('/api/cancel-order/:id', async (req, res) => {
         await order.save();
 
         // Send email notification to Admin
-        const mailOptions = {
+        const adminMailOptions = {
             from: process.env.GMAIL_USER,
             to: process.env.GMAIL_USER, // Admin email
             subject: `🚫 Order Cancelled: ${id}`,
@@ -313,12 +313,32 @@ Reason: ${reason || 'No reason provided'}
 Please update your records.`
         };
 
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.error('Error sending cancellation email to admin:', error);
-            } else {
-                console.log('Cancellation email sent to admin: ' + info.response);
-            }
+        // Send email notification to Customer
+        const customerMailOptions = {
+            from: process.env.GMAIL_USER,
+            to: order.customer.email,
+            subject: `Order Cancelled: ${id}`,
+            text: `Hi ${order.customer.firstName},
+
+Your order ${id} has been successfully cancelled as per your request.
+
+Refund Status: If you paid online, the refund will be processed within 5-7 business days.
+
+If this was a mistake, please contact support immediately.
+
+Best regards,
+ShineBro Team`
+        };
+
+        // Send both emails
+        transporter.sendMail(adminMailOptions, (error, info) => {
+            if (error) console.error('Error sending cancellation email to admin:', error);
+            else console.log('Cancellation email sent to admin: ' + info.response);
+        });
+
+        transporter.sendMail(customerMailOptions, (error, info) => {
+            if (error) console.error('Error sending cancellation email to customer:', error);
+            else console.log('Cancellation email sent to customer: ' + info.response);
         });
 
         res.json({ success: true, message: 'Order cancelled successfully', order });

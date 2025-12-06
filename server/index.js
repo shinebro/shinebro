@@ -622,7 +622,7 @@ if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
         try {
             await connectDB();
             app.listen(PORT, () => {
-                console.log(`Server running on http://localhost:${PORT}`);
+                console.log(`Server running on http://shinebro.com`);
             });
         } catch (error) {
             console.error("Failed to start server:", error);
@@ -633,4 +633,5 @@ if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
 
 module.exports = app;
 // Force restart for updates
+
 

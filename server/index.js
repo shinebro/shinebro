@@ -330,16 +330,18 @@ Best regards,
 ShineBro Team`
         };
 
-        // Send both emails
-        transporter.sendMail(adminMailOptions, (error, info) => {
-            if (error) console.error('Error sending cancellation email to admin:', error);
-            else console.log('Cancellation email sent to admin: ' + info.response);
-        });
-
-        transporter.sendMail(customerMailOptions, (error, info) => {
-            if (error) console.error('Error sending cancellation email to customer:', error);
-            else console.log('Cancellation email sent to customer: ' + info.response);
-        });
+        // Send details to Admin & Customer asynchronously but wait for completion
+        // In Vercel, we must wait for async tasks or the function freezes
+        try {
+            await Promise.allSettled([
+                transporter.sendMail(adminMailOptions),
+                transporter.sendMail(customerMailOptions)
+            ]);
+            console.log('Cancellation emails sent.');
+        } catch (emailError) {
+            console.error('Failed to send cancellation emails:', emailError);
+            // Don't fail the request, just log it
+        }
 
         res.json({ success: true, message: 'Order cancelled successfully', order });
 

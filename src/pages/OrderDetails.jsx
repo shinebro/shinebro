@@ -78,8 +78,8 @@ const OrderDetails = () => {
 
             if (data.success) {
                 alert('Order cancelled successfully');
-                // Refresh order details
-                setOrder(data.order);
+                // Reload to fetch the updated formatted data (with new tracking list) from server
+                window.location.reload();
             } else {
                 alert(data.message || 'Failed to cancel order');
             }
@@ -179,7 +179,7 @@ const OrderDetails = () => {
                                                     </div>
                                                     <div className="-mt-1">
                                                         <p className={`text-sm font-medium ${step.status === 'Cancelled' ? 'text-red-600' :
-                                                                step.completed ? 'text-gray-900' : 'text-gray-400'
+                                                            step.completed ? 'text-gray-900' : 'text-gray-400'
                                                             }`}>{step.status}</p>
                                                         <p className="text-xs text-gray-500">{step.date}</p>
                                                         {step.status === 'Delivered' && step.completed && (

@@ -49,6 +49,33 @@ const OrderDetails = () => {
         alert('Thank you for your review!');
     };
 
+    const handleCancelOrder = async () => {
+        if (!window.confirm('Are you sure you want to cancel this order?')) return;
+
+        try {
+            const response = await fetch(`/api/orders/${orderId}/cancel`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ reason: 'User requested cancellation from dashboard' }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert('Order cancelled successfully');
+                // Refresh order details
+                setOrder(data.order);
+            } else {
+                alert(data.message || 'Failed to cancel order');
+            }
+        } catch (error) {
+            console.error('Error cancelling order:', error);
+            alert('Failed to connect to server');
+        }
+    };
+
     if (!order) return <div className="min-h-screen flex items-center justify-center text-xl">Order not found</div>;
 
     return (
@@ -73,7 +100,7 @@ const OrderDetails = () => {
                             <div className="text-sm">
                                 <p className="font-bold mb-1">{order.address?.firstName} {order.address?.lastName}</p>
                                 <p className="text-gray-600 mb-1">{order.address?.address || ''}</p>
-                                <p className="text-gray-600 mb-1">{order.address?.city || ''}, {order.address?.zipCode || ''}</p>
+                                <p className="text-gray-600 mb-1">{order.address?.city || ''}, {order.address?.pincode || ''}</p>
                                 <p className="font-bold mt-2">Phone number</p>
                                 <p className="text-gray-600">{order.address?.phone || 'N/A'}</p>
                             </div>
@@ -92,6 +119,15 @@ const OrderDetails = () => {
                             >
                                 <HelpCircle size={16} /> Need Help?
                             </button>
+
+                            {['Processing', 'Order Placed', 'Pending'].includes(order.status) && (
+                                <button
+                                    onClick={handleCancelOrder}
+                                    className="w-full flex items-center gap-3 text-sm text-red-600 py-3 border-t border-gray-100 cursor-pointer hover:bg-red-50 px-2 rounded transition-colors text-left"
+                                >
+                                    <X size={16} /> Cancel Order
+                                </button>
+                            )}
                         </div>
                     </div>
 
@@ -155,116 +191,120 @@ const OrderDetails = () => {
             </div>
 
             {/* Rate & Review Modal */}
-            {showRateModal && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-lg shadow-xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
-                        <div className="flex justify-between items-center p-4 border-b">
-                            <h3 className="font-bold text-lg">Rate Product</h3>
-                            <button onClick={() => setShowRateModal(false)} className="text-gray-400 hover:text-gray-600">
-                                <X size={24} />
-                            </button>
-                        </div>
-                        <form onSubmit={submitReview} className="p-6 space-y-4">
-                            <div className="flex items-center gap-4">
-                                <div className="w-16 h-16 bg-gray-100 rounded p-2">
-                                    <img src={selectedItemForReview?.image} alt="" className="w-full h-full object-contain" />
+            {
+                showRateModal && (
+                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                        <div className="bg-white rounded-lg shadow-xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
+                            <div className="flex justify-between items-center p-4 border-b">
+                                <h3 className="font-bold text-lg">Rate Product</h3>
+                                <button onClick={() => setShowRateModal(false)} className="text-gray-400 hover:text-gray-600">
+                                    <X size={24} />
+                                </button>
+                            </div>
+                            <form onSubmit={submitReview} className="p-6 space-y-4">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-16 h-16 bg-gray-100 rounded p-2">
+                                        <img src={selectedItemForReview?.image} alt="" className="w-full h-full object-contain" />
+                                    </div>
+                                    <div>
+                                        <p className="font-medium text-sm line-clamp-2">{selectedItemForReview?.name}</p>
+                                    </div>
                                 </div>
+
+                                <div className="flex flex-col items-center gap-2 py-4">
+                                    <p className="text-sm text-gray-600">How would you rate this product?</p>
+                                    <div className="flex gap-2">
+                                        {[1, 2, 3, 4, 5].map((star) => (
+                                            <button
+                                                key={star}
+                                                type="button"
+                                                onClick={() => setRating(star)}
+                                                className={`transition-transform hover:scale-110 ${rating >= star ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
+                                            >
+                                                <Star size={32} fill={rating >= star ? "currentColor" : "none"} />
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
                                 <div>
-                                    <p className="font-medium text-sm line-clamp-2">{selectedItemForReview?.name}</p>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Write a Review</label>
+                                    <textarea
+                                        value={review}
+                                        onChange={(e) => setReview(e.target.value)}
+                                        rows={4}
+                                        className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-primary focus:border-transparent outline-none resize-none"
+                                        placeholder="What did you like or dislike?"
+                                        required
+                                    ></textarea>
                                 </div>
-                            </div>
 
-                            <div className="flex flex-col items-center gap-2 py-4">
-                                <p className="text-sm text-gray-600">How would you rate this product?</p>
-                                <div className="flex gap-2">
-                                    {[1, 2, 3, 4, 5].map((star) => (
-                                        <button
-                                            key={star}
-                                            type="button"
-                                            onClick={() => setRating(star)}
-                                            className={`transition-transform hover:scale-110 ${rating >= star ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
-                                        >
-                                            <Star size={32} fill={rating >= star ? "currentColor" : "none"} />
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Write a Review</label>
-                                <textarea
-                                    value={review}
-                                    onChange={(e) => setReview(e.target.value)}
-                                    rows={4}
-                                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-primary focus:border-transparent outline-none resize-none"
-                                    placeholder="What did you like or dislike?"
-                                    required
-                                ></textarea>
-                            </div>
-
-                            <button
-                                type="submit"
-                                className="w-full bg-primary hover:bg-green-700 text-white font-bold py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
-                            >
-                                <Send size={18} /> Submit Review
-                            </button>
-                        </form>
+                                <button
+                                    type="submit"
+                                    className="w-full bg-primary hover:bg-green-700 text-white font-bold py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
+                                >
+                                    <Send size={18} /> Submit Review
+                                </button>
+                            </form>
+                        </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
             {/* Need Help Modal */}
-            {showHelpModal && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-lg shadow-xl w-full max-w-sm animate-in fade-in zoom-in duration-200">
-                        <div className="flex justify-between items-center p-4 border-b">
-                            <h3 className="font-bold text-lg flex items-center gap-2">
-                                <HelpCircle className="text-primary" /> Need Help?
-                            </h3>
-                            <button onClick={() => setShowHelpModal(false)} className="text-gray-400 hover:text-gray-600">
-                                <X size={24} />
-                            </button>
-                        </div>
-                        <div className="p-6 space-y-4">
-                            <p className="text-gray-600 text-sm">
-                                Have an issue with your order? Our support team is here to help you.
-                            </p>
+            {
+                showHelpModal && (
+                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                        <div className="bg-white rounded-lg shadow-xl w-full max-w-sm animate-in fade-in zoom-in duration-200">
+                            <div className="flex justify-between items-center p-4 border-b">
+                                <h3 className="font-bold text-lg flex items-center gap-2">
+                                    <HelpCircle className="text-primary" /> Need Help?
+                                </h3>
+                                <button onClick={() => setShowHelpModal(false)} className="text-gray-400 hover:text-gray-600">
+                                    <X size={24} />
+                                </button>
+                            </div>
+                            <div className="p-6 space-y-4">
+                                <p className="text-gray-600 text-sm">
+                                    Have an issue with your order? Our support team is here to help you.
+                                </p>
 
-                            <div className="space-y-3">
-                                <a href="mailto:support@shinebro.com" className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                                    <div className="bg-blue-100 p-2 rounded-full text-blue-600">
-                                        <Send size={18} />
-                                    </div>
-                                    <div>
-                                        <p className="font-medium text-sm">Email Support</p>
-                                        <p className="text-xs text-gray-500">support@shinebro.com</p>
-                                    </div>
-                                </a>
+                                <div className="space-y-3">
+                                    <a href="mailto:support@shinebro.com" className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                                        <div className="bg-blue-100 p-2 rounded-full text-blue-600">
+                                            <Send size={18} />
+                                        </div>
+                                        <div>
+                                            <p className="font-medium text-sm">Email Support</p>
+                                            <p className="text-xs text-gray-500">support@shinebro.com</p>
+                                        </div>
+                                    </a>
 
-                                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                                    <div className="bg-green-100 p-2 rounded-full text-green-600">
-                                        <HelpCircle size={18} />
-                                    </div>
-                                    <div>
-                                        <p className="font-medium text-sm">FAQs</p>
-                                        <Link to="/contact" onClick={() => setShowHelpModal(false)} className="text-xs text-blue-600 hover:underline">
-                                            Visit our Help Center
-                                        </Link>
+                                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                                        <div className="bg-green-100 p-2 rounded-full text-green-600">
+                                            <HelpCircle size={18} />
+                                        </div>
+                                        <div>
+                                            <p className="font-medium text-sm">FAQs</p>
+                                            <Link to="/contact" onClick={() => setShowHelpModal(false)} className="text-xs text-blue-600 hover:underline">
+                                                Visit our Help Center
+                                            </Link>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <button
-                                onClick={() => setShowHelpModal(false)}
-                                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 rounded-lg transition-colors"
-                            >
-                                Close
-                            </button>
+                                <button
+                                    onClick={() => setShowHelpModal(false)}
+                                    className="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 rounded-lg transition-colors"
+                                >
+                                    Close
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+        </div >
     );
 };
 

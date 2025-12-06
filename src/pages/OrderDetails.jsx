@@ -53,7 +53,7 @@ const OrderDetails = () => {
         if (!window.confirm('Are you sure you want to cancel this order?')) return;
 
         try {
-            const response = await fetch(`/api/orders/${orderId}/cancel`, {
+            const response = await fetch(`/api/cancel-order/${orderId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

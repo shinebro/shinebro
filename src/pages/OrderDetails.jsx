@@ -85,7 +85,7 @@ const OrderDetails = () => {
             }
         } catch (error) {
             console.error('Error cancelling order:', error);
-            alert('Failed to connect to server');
+            alert(error.message || 'Failed to connect to server');
         }
     };
 

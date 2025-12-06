@@ -15,11 +15,8 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     shippingInfo: {
-        address: String,
-        city: String,
-        state: String,
-        pincode: String,
-        phone: String
+        type: Map,
+        of: String
     },
     createdAt: {
         type: Date,

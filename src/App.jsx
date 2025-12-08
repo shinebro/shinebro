@@ -23,6 +23,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Profile from './pages/Profile';
 import Contact from './pages/Contact';
+import About from './pages/About';
 import ReturnPolicy from './pages/ReturnPolicy';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
@@ -65,6 +66,7 @@ function App() {
               <Route path="/signup" element={<Navigate to="/profile" replace />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/orders" element={<MyOrders />} />
+              <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/return-policy" element={<ReturnPolicy />} />
             </Routes>

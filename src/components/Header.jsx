@@ -42,7 +42,7 @@ const Header = () => {
                             <span>|</span>
                             <span className="flex items-center gap-1">💵 COD Available</span>
                             <span>|</span>
-                            <span className="flex items-center gap-1">🚚 Delivers in 24 Hours</span>
+                            <span className="flex items-center gap-1">🚚 Delivers in 4-8 days</span>
                             <span>|</span>
                         </div>
                         {/* Duplicate set for seamless scrolling */}
@@ -53,7 +53,7 @@ const Header = () => {
                             <span>|</span>
                             <span className="flex items-center gap-1">💵 COD Available</span>
                             <span>|</span>
-                            <span className="flex items-center gap-1">🚚 Delivers in 24 Hours</span>
+                            <span className="flex items-center gap-1">🚚 Delivers in 4-8 days</span>
                             <span>|</span>
                         </div>
                         {/* Triplicate set for seamless scrolling on wide screens */}
@@ -64,7 +64,7 @@ const Header = () => {
                             <span>|</span>
                             <span className="flex items-center gap-1">💵 COD Available</span>
                             <span>|</span>
-                            <span className="flex items-center gap-1">🚚 Delivers in 24 Hours</span>
+                            <span className="flex items-center gap-1">🚚 Delivers in 4-8 days</span>
                             <span>|</span>
                         </div>
                         {/* Quadruplicate set for seamless scrolling on very wide screens */}
@@ -75,7 +75,7 @@ const Header = () => {
                             <span>|</span>
                             <span className="flex items-center gap-1">💵 COD Available</span>
                             <span>|</span>
-                            <span className="flex items-center gap-1">🚚 Delivers in 24 Hours</span>
+                            <span className="flex items-center gap-1">🚚 Delivers in 4-8 days</span>
                             <span>|</span>
                         </div>
                     </div>
@@ -103,7 +103,7 @@ const Header = () => {
                         <nav className="hidden lg:flex items-center gap-8">
                             <Link to="/" className="text-gray-600 hover:text-primary font-medium transition-colors">Home</Link>
                             <Link to="/shop" className="text-gray-600 hover:text-primary font-medium transition-colors">Shop</Link>
-                            <a href="#about" className="text-gray-600 hover:text-primary font-medium transition-colors">About Us</a>
+                            <Link to="/about" className="text-gray-600 hover:text-primary font-medium transition-colors">About Us</Link>
                             <Link to="/contact" className="text-gray-600 hover:text-primary font-medium transition-colors">Contact</Link>
                         </nav>
 
@@ -178,7 +178,7 @@ const Header = () => {
                             <nav className="flex flex-col gap-4 pt-4">
                                 <Link to="/" className="text-gray-600 hover:text-primary font-medium" onClick={() => setIsMenuOpen(false)}>Home</Link>
                                 <Link to="/shop" className="text-gray-600 hover:text-primary font-medium" onClick={() => setIsMenuOpen(false)}>Shop</Link>
-                                <a href="#about" className="text-gray-600 hover:text-primary font-medium" onClick={() => setIsMenuOpen(false)}>About Us</a>
+                                <Link to="/about" className="text-gray-600 hover:text-primary font-medium" onClick={() => setIsMenuOpen(false)}>About Us</Link>
                                 <Link to="/contact" className="text-gray-600 hover:text-primary font-medium" onClick={() => setIsMenuOpen(false)}>Contact</Link>
                                 {!user && (
                                     <Link
@@ -205,4 +205,3 @@ const Header = () => {
 };
 
 export default Header;
-

@@ -7,6 +7,7 @@ const products = require('./data/products');
 const connectDB = require('./config/db');
 const User = require('./models/User');
 const Order = require('./models/Order');
+const Review = require('./models/Review');
 
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
@@ -67,19 +68,110 @@ app.use(async (req, res, next) => {
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '../dist')));
 
-// Get all products
-app.get('/api/products', (req, res) => {
-    const visibleProducts = products.filter(p => !p.isRemoved);
-    res.json(visibleProducts);
+// Get all products (with dynamic ratings)
+app.get('/api/products', async (req, res) => {
+    try {
+        const visibleProducts = products.filter(p => !p.isRemoved);
+
+        // Fetch reviews for all products
+        const allReviews = await Review.find({});
+
+        const productsWithRatings = visibleProducts.map(product => {
+            const productReviews = allReviews.filter(r => r.productId === product.id);
+            const reviewCount = productReviews.length;
+            const avgRating = reviewCount > 0
+                ? productReviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount
+                : 0; // Default to 0 instead of static data if no reviews
+
+            // Round to 1 decimal place
+            const roundedRating = Math.round(avgRating * 10) / 10;
+
+            return {
+                ...product,
+                rating: reviewCount > 0 ? roundedRating : 0,
+                reviews: reviewCount
+            };
+        });
+
+        res.json(productsWithRatings);
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        res.status(500).json({ message: "Failed to fetch products" });
+    }
 });
 
-// Get single product by ID
-app.get('/api/products/:id', (req, res) => {
-    const product = products.find(p => p.id === parseInt(req.params.id));
+// Get single product by ID (with dynamic ratings)
+app.get('/api/products/:id', async (req, res) => {
+    const productId = parseInt(req.params.id);
+    const product = products.find(p => p.id === productId);
+
     if (product) {
-        res.json(product);
+        try {
+            const reviews = await Review.find({ productId });
+            const reviewCount = reviews.length;
+            const avgRating = reviewCount > 0
+                ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount
+                : 0;
+
+            const roundedRating = Math.round(avgRating * 10) / 10;
+
+            res.json({
+                ...product,
+                rating: reviewCount > 0 ? roundedRating : 0,
+                reviews: reviewCount
+            });
+        } catch (error) {
+            console.error("Error fetching product details:", error);
+            // Fallback to static product data if DB fails
+            res.json(product);
+        }
     } else {
         res.status(404).json({ message: 'Product not found' });
+    }
+});
+
+// Get reviews for a specific product
+app.get('/api/reviews/:productId', async (req, res) => {
+    try {
+        const productId = parseInt(req.params.productId);
+        const reviews = await Review.find({ productId }).sort({ createdAt: -1 });
+        res.json(reviews);
+    } catch (error) {
+        console.error("Error fetching reviews:", error);
+        res.status(500).json({ message: "Failed to fetch reviews" });
+    }
+});
+
+// Get recent reviews (for Home page)
+app.get('/api/reviews-recent', async (req, res) => {
+    try {
+        // Fetch most recent 3 reviews
+        const reviews = await Review.find({}).sort({ createdAt: -1 }).limit(3);
+        res.json(reviews);
+    } catch (error) {
+        console.error("Error fetching recent reviews:", error);
+        res.status(500).json({ message: "Failed to fetch recent reviews" });
+    }
+});
+
+// Submit a review
+app.post('/api/reviews', validate(schemas.review), async (req, res) => {
+    try {
+        const { productId, rating, text, name } = req.body;
+
+        const newReview = new Review({
+            productId,
+            rating,
+            text,
+            name
+        });
+
+        await newReview.save();
+
+        res.status(201).json({ success: true, message: "Review submitted successfully", review: newReview });
+    } catch (error) {
+        console.error("Error submitting review:", error);
+        res.status(500).json({ message: "Failed to submit review" });
     }
 });
 

@@ -51,6 +51,7 @@ const ProductDetail = () => {
                 const productData = await productRes.json();
 
                 if (productRes.ok) {
+                    console.log("Product Data Received:", productData); // Debug log
                     setProduct(productData);
                     if (productData.sizes && productData.sizes.length > 0) {
                         setSelectedSize(productData.sizes[1]); // Default to middle size

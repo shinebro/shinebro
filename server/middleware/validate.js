@@ -59,6 +59,12 @@ const schemas = {
         email: Joi.string().email().required(),
         code: Joi.string().length(6).required(),
         newPassword: Joi.string().min(6).required()
+    }),
+    review: Joi.object({
+        productId: Joi.number().required(),
+        rating: Joi.number().min(1).max(5).required(),
+        text: Joi.string().required(),
+        name: Joi.string().required()
     })
 };
 

@@ -71,6 +71,7 @@ export const products = [
             "/images/toilet-cleaner-3.png"
         ],
         category: "Bathroom",
+        category: "Bathroom",
         isNew: true,
         inStock: false,
         sizes: [

@@ -64,7 +64,12 @@ export const products = [
         name: "Toilet Cleaner",
         price: 120,
         image: "/images/toilet-cleaner.jpg",
-        category: "Bathroom",
+        images: [
+            "/images/toilet-cleaner.jpg",
+            "/images/toilet-cleaner-1.jpg",
+            "/images/toilet-cleaner-2.jpg",
+            "/images/toilet-cleaner-3.png"
+        ],
         category: "Bathroom",
         isNew: true,
         inStock: false,

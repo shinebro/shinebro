@@ -50,9 +50,9 @@ const products = [
         image: "/images/toilet-cleaner.jpg",
         images: [
             "/images/toilet-cleaner.jpg",
-            "/images/toilet-cleaner-1.jpg",
-            "/images/toilet-cleaner-2.jpg",
-            "/images/toilet-cleaner-3.png"
+            "/images/tc1.jpg",
+            "/images/tc2.jpg",
+            "/images/tc3.png"
         ],
         category: "Bathroom",
         rating: 4.5,

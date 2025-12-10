@@ -51,16 +51,26 @@ const ProductDetail = () => {
                 const productData = await productRes.json();
 
                 if (productRes.ok) {
-                    console.log("Product Data Received:", productData); // Debug log
-                    setProduct(productData);
-                    if (productData.sizes && productData.sizes.length > 0) {
-                        setSelectedSize(productData.sizes[1]); // Default to middle size
+                    let finalProduct = productData;
+
+                    // Fallback using static data if API doesn't have images yet (server restart lag)
+                    if (!finalProduct.images || finalProduct.images.length === 0) {
+                        const staticProduct = products.find(p => p.id === parseInt(id));
+                        if (staticProduct && staticProduct.images && staticProduct.images.length > 0) {
+                            console.log("Using static images fallback", staticProduct.images);
+                            finalProduct = { ...productData, images: staticProduct.images };
+                        }
                     }
-                    if (productData.images && productData.images.length > 0) {
-                        setProductImages(productData.images);
+
+                    setProduct(finalProduct);
+                    if (finalProduct.sizes && finalProduct.sizes.length > 0) {
+                        setSelectedSize(finalProduct.sizes[1]); // Default to middle size
+                    }
+                    if (finalProduct.images && finalProduct.images.length > 0) {
+                        setProductImages(finalProduct.images);
                     } else {
                         // Fallback to single image if no extra images
-                        setProductImages([productData.image]);
+                        setProductImages([finalProduct.image]);
                     }
                 } else {
                     setLoading(false);

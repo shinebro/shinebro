@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Star, ShoppingCart, Zap, Tag, Truck, RotateCcw, ShieldCheck, ChevronRight, Heart } from 'lucide-react';
 
 import { useCart } from '../context/CartContext';
-// import { products } from '../data/products'; // No longer using static products for details
+import { products } from '../data/products';
 
 const ProductDetail = () => {
     const { id } = useParams();

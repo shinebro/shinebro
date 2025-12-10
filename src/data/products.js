@@ -5,8 +5,7 @@ export const products = [
         price: 120,
         image: "/images/laundry-liquid.png",
         category: "Laundry",
-        rating: 4.8,
-        reviews: 120,
+        category: "Laundry",
         isNew: true,
         inStock: false,
         sizes: [
@@ -21,8 +20,7 @@ export const products = [
         price: 210,
         image: "/images/dishwash-product.jpg",
         category: "Kitchen",
-        rating: 4.7,
-        reviews: 85,
+        category: "Kitchen",
         isNew: false,
         inStock: true,
         sizes: [
@@ -37,8 +35,7 @@ export const products = [
         price: 120,
         image: "https://placehold.co/400x400/e2e8f0/1e293b?text=Floor+Cleaner",
         category: "Floor",
-        rating: 4.9,
-        reviews: 200,
+        category: "Floor",
         isNew: true,
         inStock: false,
         sizes: [
@@ -53,8 +50,7 @@ export const products = [
         price: 120,
         image: "https://placehold.co/400x400/e2e8f0/1e293b?text=Fabric+Cond",
         category: "Laundry",
-        rating: 4.6,
-        reviews: 50,
+        category: "Laundry",
         isNew: false,
         inStock: false,
         sizes: [
@@ -69,8 +65,7 @@ export const products = [
         price: 120,
         image: "/images/toilet-cleaner.jpg",
         category: "Bathroom",
-        rating: 4.5,
-        reviews: 45,
+        category: "Bathroom",
         isNew: true,
         inStock: false,
         sizes: [
@@ -80,4 +75,3 @@ export const products = [
         ]
     },
 ];
-

@@ -55,13 +55,12 @@ const ProductDetail = () => {
                     if (productData.sizes && productData.sizes.length > 0) {
                         setSelectedSize(productData.sizes[1]); // Default to middle size
                     }
-                    // Mock multiple images for carousel (still mocking this part as API doesn't have multiple images yet)
-                    setProductImages([
-                        productData.image,
-                        productData.image,
-                        productData.image,
-                        productData.image
-                    ]);
+                    if (productData.images && productData.images.length > 0) {
+                        setProductImages(productData.images);
+                    } else {
+                        // Fallback to single image if no extra images
+                        setProductImages([productData.image]);
+                    }
                 } else {
                     setLoading(false);
                     return;

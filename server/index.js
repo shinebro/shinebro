@@ -66,6 +66,7 @@ app.use(async (req, res, next) => {
 });
 
 // Serve static files from the React app
+app.use(express.static(path.join(__dirname, '../public'))); // Serve public folder directly
 app.use(express.static(path.join(__dirname, '../dist')));
 
 // Get all products (with dynamic ratings)

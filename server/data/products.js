@@ -13,7 +13,7 @@ const products = [
     {
         id: 2,
         name: "Dishwashing Liquid",
-        price: 120,
+        price: 299,
         image: "/images/dishwash-product.jpg",
         category: "Kitchen",
         rating: 4.7,
@@ -24,7 +24,7 @@ const products = [
     {
         id: 3,
         name: "Floor Cleaner",
-        price: 110,
+        price: 349,
         image: "https://placehold.co/400x400/e2e8f0/1e293b?text=Floor+Cleaner",
         category: "Floor",
         rating: 4.9,
@@ -35,7 +35,7 @@ const products = [
     {
         id: 4,
         name: "Fabric Conditioner",
-        price: 120,
+        price: 399,
         image: "https://placehold.co/400x400/e2e8f0/1e293b?text=Fabric+Cond",
         category: "Laundry",
         rating: 4.6,
@@ -46,8 +46,14 @@ const products = [
     {
         id: 5,
         name: "Toilet Cleaner",
-        price: 120,
+        price: 249,
         image: "/images/toilet-cleaner.jpg",
+        images: [
+            "/images/toilet-cleaner.jpg",
+            "/images/toilet-cleaner-1.jpg",
+            "/images/toilet-cleaner-2.jpg",
+            "/images/toilet-cleaner-3.png"
+        ],
         category: "Bathroom",
         rating: 4.5,
         reviews: 45,
@@ -57,7 +63,7 @@ const products = [
     {
         id: 6,
         name: "Hand Wash Rose",
-        price: 99,
+        price: 199,
         image: "https://placehold.co/400x400/e2e8f0/1e293b?text=Hand+Wash",
         category: "HandWash",
         rating: 4.8,

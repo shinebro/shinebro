@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Star, ShoppingCart, Zap, Tag, Truck, RotateCcw, ShieldCheck, ChevronRight, Heart } from 'lucide-react';
 
 import { useCart } from '../context/CartContext';
-import { products } from '../data/products';
+// import { products } from '../data/products'; // No longer using static products for details
 
 const ProductDetail = () => {
     const { id } = useParams();
@@ -44,21 +44,44 @@ const ProductDetail = () => {
     };
 
     useEffect(() => {
-        const productData = products.find(p => p.id === parseInt(id));
-        if (productData) {
-            setProduct(productData);
-            if (productData.sizes && productData.sizes.length > 0) {
-                setSelectedSize(productData.sizes[1]); // Default to middle size
+        const fetchProductAndReviews = async () => {
+            try {
+                // Fetch Product Details
+                const productRes = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/products/${id}`);
+                const productData = await productRes.json();
+
+                if (productRes.ok) {
+                    setProduct(productData);
+                    if (productData.sizes && productData.sizes.length > 0) {
+                        setSelectedSize(productData.sizes[1]); // Default to middle size
+                    }
+                    // Mock multiple images for carousel (still mocking this part as API doesn't have multiple images yet)
+                    setProductImages([
+                        productData.image,
+                        productData.image,
+                        productData.image,
+                        productData.image
+                    ]);
+                } else {
+                    setLoading(false);
+                    return;
+                }
+
+                // Fetch Reviews
+                const reviewsRes = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/reviews/${id}`);
+                const reviewsData = await reviewsRes.json();
+                if (reviewsRes.ok) {
+                    setReviews(reviewsData);
+                }
+
+                setLoading(false);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                setLoading(false);
             }
-            // Mock multiple images for carousel
-            setProductImages([
-                productData.image,
-                productData.image, // Duplicate for demo
-                productData.image, // Duplicate for demo
-                productData.image  // Duplicate for demo
-            ]);
-        }
-        setLoading(false);
+        };
+
+        fetchProductAndReviews();
     }, [id]);
 
     const handleAddToCart = () => {
@@ -99,15 +122,40 @@ const ProductDetail = () => {
         setCurrentImageIndex((prev) => (prev - 1 + productImages.length) % productImages.length);
     };
 
-    const handleReviewSubmit = (e) => {
+    const handleReviewSubmit = async (e) => {
         e.preventDefault();
-        const review = {
-            ...newReview,
-            date: new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
-        };
-        setReviews([review, ...reviews]);
-        setNewReview({ rating: 5, text: '', name: 'User' });
-        setShowReviewForm(false);
+
+        try {
+            const reviewData = {
+                productId: parseInt(id),
+                ...newReview
+            };
+
+            const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/reviews`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(reviewData)
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                // Prepend new review to list
+                setReviews([data.review, ...reviews]);
+                setNewReview({ rating: 5, text: '', name: 'User' });
+                setShowReviewForm(false);
+
+                // Update product rating locally for immediate feedback (optional, or re-fetch)
+                // For simplicity, we can let the user see their review
+            } else {
+                alert(data.message || "Failed to submit review");
+            }
+        } catch (error) {
+            console.error("Error submitting review:", error);
+            alert("An error occurred. Please try again.");
+        }
     };
 
     if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>;
@@ -226,9 +274,9 @@ const ProductDetail = () => {
                         <h1 className="text-xl font-medium text-gray-800 mb-2">{product.name}</h1>
                         <div className="flex items-center gap-3 mb-4">
                             <span className="bg-green-600 text-white text-xs font-bold px-2 py-0.5 rounded-sm flex items-center gap-1">
-                                {product.rating} <Star size={10} fill="currentColor" />
+                                {product.rating || 0} <Star size={10} fill="currentColor" />
                             </span>
-                            <span className="text-gray-500 text-sm font-medium">{product.reviews} Ratings & {Math.floor(product.reviews * 0.4)} Reviews</span>
+                            <span className="text-gray-500 text-sm font-medium">{product.reviews || 0} Ratings & Reviews</span>
                         </div>
 
                         {/* Price */}
@@ -419,21 +467,22 @@ const ProductDetail = () => {
                                 <div className="flex flex-col md:flex-row gap-8 mb-8">
                                     <div className="text-center">
                                         <div className="text-3xl font-bold text-gray-900 flex items-center justify-center gap-1">
-                                            {product.rating} <Star size={24} fill="currentColor" className="text-gray-900" />
+                                            {product.rating || 0} <Star size={24} fill="currentColor" className="text-gray-900" />
                                         </div>
-                                        <div className="text-gray-500 text-sm mt-1">{product.reviews} Ratings & Reviews</div>
+                                        <div className="text-gray-500 text-sm mt-1">{product.reviews || 0} Ratings & Reviews</div>
                                     </div>
                                     <div className="flex-1 space-y-1">
+                                        {/* Simplified Rating Distribution (Mock for now as backend doesn't return distribution yet) */}
                                         {[5, 4, 3, 2, 1].map((star) => (
                                             <div key={star} className="flex items-center gap-2 text-xs">
                                                 <span className="w-3 font-bold">{star}</span> <Star size={10} className="text-gray-400" />
                                                 <div className="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden">
                                                     <div
                                                         className={`h-full ${star >= 4 ? 'bg-green-500' : star === 3 ? 'bg-yellow-500' : 'bg-red-500'}`}
-                                                        style={{ width: `${star === 5 ? 70 : star === 4 ? 20 : 5}%` }}
+                                                        style={{ width: `${star === 5 ? (product.rating > 4.5 ? 80 : 20) : 10}%` }}
                                                     ></div>
                                                 </div>
-                                                <span className="text-gray-400 w-6 text-right">{star === 5 ? 85 : star === 4 ? 25 : 5}</span>
+                                                <span className="text-gray-400 w-6 text-right">--</span>
                                             </div>
                                         ))}
                                     </div>
@@ -458,7 +507,7 @@ const ProductDetail = () => {
                                                             <ShieldCheck size={12} /> Verified Buyer
                                                         </div>
                                                     </div>
-                                                    <span>{review.date}</span>
+                                                    <span>{review.createdAt ? new Date(review.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'Recently'}</span>
                                                 </div>
                                             </div>
                                         ))

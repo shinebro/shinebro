@@ -25,7 +25,7 @@ const products = [
         id: 3,
         name: "Floor Cleaner",
         price: 349,
-        image: "/images/floor-cleaner-new.jpg",
+        image: "/images/floor-cleaner-new.jpg?v=1",
         category: "Floor",
         rating: 4.9,
         reviews: 200,

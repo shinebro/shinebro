@@ -7,6 +7,7 @@ import { products } from '../data/products';
 import tc1 from '../assets/tc1.jpg';
 import tc2 from '../assets/tc2.jpg';
 import tc3 from '../assets/tc3.png';
+import toiletCleanerMain from '../assets/toilet-cleaner.jpg';
 
 const ProductDetail = () => {
     const { id } = useParams();
@@ -67,8 +68,8 @@ const ProductDetail = () => {
 
                     // Explicit Hardcode for Toilet Cleaner (ID 5) to ensure images load
                     if (parseInt(id) === 5) {
-                        finalProduct.images = [tc1, tc2, tc3];
-                        finalProduct.image = tc1; // Update main image too
+                        finalProduct.images = [toiletCleanerMain, tc1, tc2, tc3];
+                        finalProduct.image = toiletCleanerMain; // Update main image too
                     }
 
                     setProduct(finalProduct);

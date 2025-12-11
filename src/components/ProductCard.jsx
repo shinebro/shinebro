@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Star, ShoppingCart, Loader2, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import floorCleanerNew from '../assets/floor-cleaner-new.jpg';
 
 const ProductCard = ({ product }) => {
     const { addToCart } = useCart();
@@ -39,7 +40,7 @@ const ProductCard = ({ product }) => {
         >
             <div className="relative">
                 <img
-                    src={product.image}
+                    src={product.id === 3 ? floorCleanerNew : product.image}
                     alt={product.name}
                     className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
                 />

@@ -25,7 +25,7 @@ const products = [
         id: 3,
         name: "Floor Cleaner",
         price: 349,
-        image: "https://placehold.co/400x400/e2e8f0/1e293b?text=Floor+Cleaner",
+        image: "/images/floor-cleaner-new.jpg",
         category: "Floor",
         rating: 4.9,
         reviews: 200,

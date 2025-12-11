@@ -33,7 +33,7 @@ export const products = [
         id: 3,
         name: "Floor Cleaner",
         price: 120,
-        image: "/images/floor-cleaner-new.jpg",
+        image: "/images/floor-cleaner-new.jpg?v=1",
         category: "Floor",
         category: "Floor",
         isNew: true,

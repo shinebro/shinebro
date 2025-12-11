@@ -35,7 +35,6 @@ const Footer = () => {
                             <li><Link to="/" className="text-gray-400 hover:text-primary transition-colors">Home</Link></li>
                             <li><Link to="/shop" className="text-gray-400 hover:text-primary transition-colors">Shop</Link></li>
                             <li><Link to="/about" className="text-gray-400 hover:text-primary transition-colors">About Us</Link></li>
-                            <li><Link to="/blog" className="text-gray-400 hover:text-primary transition-colors">Blog</Link></li>
                         </ul>
                     </div>
 
@@ -44,8 +43,6 @@ const Footer = () => {
                         <h3 className="text-lg font-bold mb-6">Customer Service</h3>
                         <ul className="space-y-4">
                             <li><Link to="/contact" className="text-gray-400 hover:text-primary transition-colors">Contact Us</Link></li>
-                            <li><Link to="/faq" className="text-gray-400 hover:text-primary transition-colors">FAQs</Link></li>
-                            <li><Link to="/shipping" className="text-gray-400 hover:text-primary transition-colors">Shipping Policy</Link></li>
                             <li><Link to="/return-policy" className="text-gray-400 hover:text-primary transition-colors">Returns & Refunds</Link></li>
                         </ul>
                     </div>

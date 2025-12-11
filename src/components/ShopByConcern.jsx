@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import floorCleanerNew from '../assets/floor-cleaner-new.jpg';
 
 const concerns = [
     { name: "Laundry", image: "/images/laundry-concern.jpg", link: "/shop/laundry" },
     { name: "Dishwashing", image: "/images/dishwashing-concern.jpg", link: "/shop/kitchen" },
-    { name: "Floor Cleaning", image: "/images/floor-cleaning-concern.jpg", link: "/shop/floor" },
+    { name: "Floor Cleaning", image: floorCleanerNew, link: "/shop/floor" },
     { name: "Glass Cleaning", image: "/images/glass-cleaning-concern.jpg", link: "/shop/delicate" },
 
 ];

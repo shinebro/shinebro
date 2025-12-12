@@ -114,12 +114,21 @@ app.get('/api/products/:id', async (req, res) => {
                 ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount
                 : 0;
 
+            // Calculate distribution
+            const distribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+            reviews.forEach(r => {
+                if (distribution[r.rating] !== undefined) {
+                    distribution[r.rating]++;
+                }
+            });
+
             const roundedRating = Math.round(avgRating * 10) / 10;
 
             res.json({
                 ...product,
                 rating: reviewCount > 0 ? roundedRating : 0,
-                reviews: reviewCount
+                reviews: reviewCount,
+                ratingDistribution: distribution
             });
         } catch (error) {
             console.error("Error fetching product details:", error);

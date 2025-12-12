@@ -5,8 +5,7 @@ const products = [
         price: 499,
         image: "/images/laundry-liquid.png",
         category: "Laundry",
-        rating: 4.8,
-        reviews: 120,
+
         isNew: true,
         inStock: false,
         sizes: [
@@ -21,8 +20,7 @@ const products = [
         price: 299,
         image: "/images/dishwash-product.jpg",
         category: "Kitchen",
-        rating: 4.7,
-        reviews: 85,
+
         isNew: false,
         inStock: true,
         sizes: [
@@ -37,8 +35,7 @@ const products = [
         price: 349,
         image: "/images/floor-cleaner-new.jpg?v=1",
         category: "Floor",
-        rating: 4.9,
-        reviews: 200,
+
         isNew: true,
         inStock: false,
         sizes: [
@@ -53,8 +50,7 @@ const products = [
         price: 399,
         image: "https://placehold.co/400x400/e2e8f0/1e293b?text=Fabric+Cond",
         category: "Laundry",
-        rating: 4.6,
-        reviews: 50,
+
         isNew: false,
         inStock: false,
         sizes: [
@@ -75,8 +71,7 @@ const products = [
             "/images/tc3.png?v=1"
         ],
         category: "Bathroom",
-        rating: 4.5,
-        reviews: 45,
+
         isNew: true,
         inStock: false,
         sizes: [
@@ -91,8 +86,7 @@ const products = [
         price: 199,
         image: "https://placehold.co/400x400/e2e8f0/1e293b?text=Hand+Wash",
         category: "HandWash",
-        rating: 4.8,
-        reviews: 150,
+
         isNew: false,
         inStock: false,
         sizes: [

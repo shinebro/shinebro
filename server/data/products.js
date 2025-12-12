@@ -9,6 +9,11 @@ const products = [
         reviews: 120,
         isNew: true,
         inStock: false,
+        sizes: [
+            { size: "500ml", price: 70 },
+            { size: "1L", price: 120 },
+            { size: "5L", price: 399 }
+        ]
     },
     {
         id: 2,
@@ -20,6 +25,11 @@ const products = [
         reviews: 85,
         isNew: false,
         inStock: true,
+        sizes: [
+            { size: "500ml", price: 70 },
+            { size: "1L", price: 120 },
+            { size: "5L", price: 399 }
+        ]
     },
     {
         id: 3,
@@ -31,6 +41,11 @@ const products = [
         reviews: 200,
         isNew: true,
         inStock: false,
+        sizes: [
+            { size: "500ml", price: 70 },
+            { size: "1L", price: 120 },
+            { size: "5L", price: 399 }
+        ]
     },
     {
         id: 4,
@@ -42,6 +57,11 @@ const products = [
         reviews: 50,
         isNew: false,
         inStock: false,
+        sizes: [
+            { size: "500ml", price: 70 },
+            { size: "1L", price: 120 },
+            { size: "5L", price: 399 }
+        ]
     },
     {
         id: 5,
@@ -59,6 +79,11 @@ const products = [
         reviews: 45,
         isNew: true,
         inStock: false,
+        sizes: [
+            { size: "500ml", price: 70 },
+            { size: "1L", price: 120 },
+            { size: "5L", price: 399 }
+        ]
     },
     {
         id: 6,
@@ -70,6 +95,11 @@ const products = [
         reviews: 150,
         isNew: false,
         inStock: false,
+        sizes: [
+            { size: "500ml", price: 70 },
+            { size: "1L", price: 120 },
+            { size: "5L", price: 399 }
+        ]
     }
 ];
 

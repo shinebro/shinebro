@@ -9,8 +9,8 @@ export const products = [
         isNew: true,
         inStock: false,
         sizes: [
+            { size: "500ml", price: 70 },
             { size: "1L", price: 120 },
-            { size: "2L", price: 210 },
             { size: "5L", price: 399 }
         ]
     },
@@ -24,8 +24,8 @@ export const products = [
         isNew: false,
         inStock: true,
         sizes: [
+            { size: "500ml", price: 70 },
             { size: "1L", price: 120 },
-            { size: "2L", price: 210 },
             { size: "5L", price: 399 }
         ]
     },
@@ -39,8 +39,8 @@ export const products = [
         isNew: true,
         inStock: false,
         sizes: [
+            { size: "500ml", price: 70 },
             { size: "1L", price: 120 },
-            { size: "2L", price: 210 },
             { size: "5L", price: 399 }
         ]
     },
@@ -54,8 +54,8 @@ export const products = [
         isNew: false,
         inStock: false,
         sizes: [
+            { size: "500ml", price: 70 },
             { size: "1L", price: 120 },
-            { size: "2L", price: 210 },
             { size: "5L", price: 399 }
         ]
     },
@@ -74,8 +74,8 @@ export const products = [
         isNew: true,
         inStock: false,
         sizes: [
+            { size: "500ml", price: 70 },
             { size: "1L", price: 120 },
-            { size: "2L", price: 210 },
             { size: "5L", price: 399 }
         ]
     },

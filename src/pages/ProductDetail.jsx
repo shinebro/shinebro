@@ -500,18 +500,24 @@ const ProductDetail = () => {
                                     </div>
                                     <div className="flex-1 space-y-1">
                                         {/* Simplified Rating Distribution (Mock for now as backend doesn't return distribution yet) */}
-                                        {[5, 4, 3, 2, 1].map((star) => (
-                                            <div key={star} className="flex items-center gap-2 text-xs">
-                                                <span className="w-3 font-bold">{star}</span> <Star size={10} className="text-gray-400" />
-                                                <div className="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden">
-                                                    <div
-                                                        className={`h-full ${star >= 4 ? 'bg-green-500' : star === 3 ? 'bg-yellow-500' : 'bg-red-500'}`}
-                                                        style={{ width: `${star === 5 ? (product.rating > 4.5 ? 80 : 20) : 10}%` }}
-                                                    ></div>
+                                        {[5, 4, 3, 2, 1].map((star) => {
+                                            const count = product.ratingDistribution ? product.ratingDistribution[star] || 0 : 0;
+                                            const total = product.reviews || 0;
+                                            const percentage = total > 0 ? (count / total) * 100 : 0;
+
+                                            return (
+                                                <div key={star} className="flex items-center gap-2 text-xs">
+                                                    <span className="w-3 font-bold">{star}</span> <Star size={10} className="text-gray-400" />
+                                                    <div className="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden">
+                                                        <div
+                                                            className={`h-full ${star >= 4 ? 'bg-green-500' : star === 3 ? 'bg-yellow-500' : 'bg-red-500'}`}
+                                                            style={{ width: `${percentage}%` }}
+                                                        ></div>
+                                                    </div>
+                                                    <span className="text-gray-400 w-8 text-right">{count}</span>
                                                 </div>
-                                                <span className="text-gray-400 w-6 text-right">--</span>
-                                            </div>
-                                        ))}
+                                            );
+                                        })}
                                     </div>
                                 </div>
 

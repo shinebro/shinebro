@@ -7,68 +7,29 @@ import { CreditCard, Truck, Lock, Smartphone } from 'lucide-react';
 const Checkout = () => {
     const navigate = useNavigate();
     const { cart, cartTotal, clearCart } = useCart();
-    const { user, openAuth } = useAuth();
-    const [loading, setLoading] = useState(false);
-    const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-        address: '',
-        city: '',
-        pincode: '',
-        phone: ''
-    });
-    const [processingPayment, setProcessingPayment] = useState(false);
+    const { user, openAuth, updateProfile } = useAuth(); // Destructure updateProfile
 
-    // Pincode Check State
-    const [pincodeInput, setPincodeInput] = useState('');
-    const [pincodeError, setPincodeError] = useState('');
-    const [isPincodeVerified, setIsPincodeVerified] = useState(false);
-    const allowedPincodes = ['400601', '400602', '400603', '400604'];
+    // ... (rest of component state)
 
-    useEffect(() => {
-        if (user && user.shippingInfo) {
-            setFormData(prev => ({
-                ...prev,
-                ...user.shippingInfo,
-                email: user.email,
-                firstName: user.name ? user.name.split(' ')[0] : '',
-                lastName: user.name ? user.name.split(' ').slice(1).join(' ') : ''
-            }));
-            if (user.shippingInfo.pincode) {
-                setPincodeInput(user.shippingInfo.pincode);
-            }
-        }
-    }, [user]);
-
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
-    };
-
-    const handleCheckPincode = (e) => {
-        e.preventDefault();
-        if (!pincodeInput) {
-            setPincodeError('Please enter a pincode');
-            return;
-        }
-        if (allowedPincodes.includes(pincodeInput)) {
-            setIsPincodeVerified(true);
-            setPincodeError('');
-            setFormData(prev => ({ ...prev, pincode: pincodeInput }));
-        } else {
-            setIsPincodeVerified(false);
-            setPincodeError('Delivery is not available for this pincode. Allowed pincodes: ' + allowedPincodes.join(', '));
-        }
-    };
-
-    const handleProceedToSummary = (e) => {
+    const handleProceedToSummary = async (e) => { // Make async
         e.preventDefault();
         if (!allowedPincodes.includes(formData.pincode)) {
             setPincodeError('Invalid Pincode');
             setIsPincodeVerified(false);
             return;
         }
+
+        // Save details if user is logged in
+        if (user) {
+            try {
+                await updateProfile(formData);
+                console.log("Profile updated with checkout details");
+            } catch (err) {
+                console.error("Failed to auto-save profile:", err);
+                // Don't block checkout if save fails
+            }
+        }
+
         navigate('/order-summary', { state: { formData } });
     };
 

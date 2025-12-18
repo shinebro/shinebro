@@ -8,6 +8,9 @@ const Checkout = () => {
     const navigate = useNavigate();
     const { cart, cartTotal, clearCart } = useCart();
     const { user, openAuth, updateProfile } = useAuth(); // Destructure updateProfile
+    console.log("Checkout render. User:", user);
+
+    const [loading, setLoading] = useState(false);
 
     // ... (rest of component state)
 

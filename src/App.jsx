@@ -19,8 +19,7 @@ import PrivateRoute from './components/PrivateRoute';
 import Shop from './pages/Shop';
 import CategoryPage from './pages/CategoryPage';
 import GPayPayment from './pages/GPayPayment';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
+// Login and Signup removed as they are unused
 import Profile from './pages/Profile';
 import Contact from './pages/Contact';
 import About from './pages/About';

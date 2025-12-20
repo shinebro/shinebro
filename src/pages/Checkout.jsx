@@ -11,8 +11,80 @@ const Checkout = () => {
     console.log("Checkout render. User:", user);
 
     const [loading, setLoading] = useState(false);
+    const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        address: '',
+        city: '',
+        pincode: '',
+        phone: ''
+    });
+    const [processingPayment, setProcessingPayment] = useState(false);
 
-    // ... (rest of component state)
+    // Pincode Check State
+    const [pincodeInput, setPincodeInput] = useState('');
+    const [pincodeError, setPincodeError] = useState('');
+    const [isPincodeVerified, setIsPincodeVerified] = useState(false);
+    const allowedPincodes = ['400601', '400602', '400603', '400604'];
+
+    useEffect(() => {
+        if (!user) return; // Extra safety
+
+        try {
+            // Defensive coding for user.name
+            let firstName = '';
+            let lastName = '';
+            if (user.name && typeof user.name === 'string') {
+                const parts = user.name.split(' ');
+                firstName = parts[0] || '';
+                lastName = parts.slice(1).join(' ') || '';
+            }
+
+            // Defensive coding for shippingInfo
+            const safeShippingInfo = (user.shippingInfo && typeof user.shippingInfo === 'object') ? user.shippingInfo : {};
+
+            setFormData(prev => ({
+                ...prev,
+                ...safeShippingInfo,
+                email: user.email || prev.email,
+                firstName: firstName || prev.firstName,
+                lastName: lastName || prev.lastName
+            }));
+
+            if (safeShippingInfo.pincode) {
+                setPincodeInput(safeShippingInfo.pincode);
+            }
+        } catch (error) {
+            console.error("Critical Error in Checkout Effect:", error);
+        }
+    }, [user]);
+
+    // Safety check for cart
+    if (!cart) {
+        return <div className="p-10 text-center">Loading Cart...</div>;
+    }
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleCheckPincode = (e) => {
+        e.preventDefault();
+        if (!pincodeInput) {
+            setPincodeError('Please enter a pincode');
+            return;
+        }
+        if (allowedPincodes.includes(pincodeInput)) {
+            setIsPincodeVerified(true);
+            setPincodeError('');
+            setFormData(prev => ({ ...prev, pincode: pincodeInput }));
+        } else {
+            setIsPincodeVerified(false);
+            setPincodeError('Delivery is not available for this pincode. Allowed pincodes: ' + allowedPincodes.join(', '));
+        }
+    };
 
     const handleProceedToSummary = async (e) => { // Make async
         e.preventDefault();

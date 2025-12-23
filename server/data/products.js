@@ -18,7 +18,11 @@ const products = [
         id: 2,
         name: "Dishwashing Liquid",
         price: 299,
-        image: "/images/dishwash-liquid-lemon.jpg?v=2",
+        image: "/images/dishwash-front-full.jpg",
+        images: [
+            "/images/dishwash-front-full.jpg",
+            "/images/dishwash-back-label.jpg"
+        ],
         category: "Kitchen",
 
         isNew: false,

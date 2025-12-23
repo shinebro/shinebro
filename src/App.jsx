@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Layout from './components/Layout';
 import ScrollToTop from './components/ScrollToTop';
 import AuthSidebar from './components/AuthSidebar';
-import WhatsAppButton from './components/WhatsAppButton';
+
 import Home from './pages/Home';
 import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
@@ -36,7 +36,7 @@ function App() {
         <Router>
           <ScrollToTop />
           <AuthSidebar />
-          <WhatsAppButton />
+
           <Layout>
             <Routes>
               <Route path="/" element={<Home />} />

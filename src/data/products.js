@@ -18,7 +18,7 @@ export const products = [
         id: 2,
         name: "Liquid Dishwash",
         price: 210,
-        image: "/images/dishwash-product.jpg",
+        image: "/images/dishwash-liquid-lemon.jpg",
         category: "Kitchen",
         category: "Kitchen",
         isNew: false,

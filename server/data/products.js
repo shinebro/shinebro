@@ -18,7 +18,7 @@ const products = [
         id: 2,
         name: "Dishwashing Liquid",
         price: 299,
-        image: "/images/dishwash-product.jpg",
+        image: "/images/dishwash-liquid-lemon.jpg",
         category: "Kitchen",
 
         isNew: false,
